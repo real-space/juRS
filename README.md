@@ -1,2 +1,2 @@
 # juRS
-Real-space grid Density Functional Theory for large systems
+Jülich Real-space grid Density Functional Theory for large systems
