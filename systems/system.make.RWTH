@@ -1,0 +1,30 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+
+##############################################
+## Intel system ##############################
+##############################################
+CC = mpicc
+
+### serial Fortran compiler and linker
+FC         = ifort
+### parallel Fortran compiler and linker
+MPIFC      = mpiifort
+
+### compile flags for production
+CFLAGS_OPT = -r8 -O3 -g 
+
+
+### preprocessor
+CPP    = cpp
+CPPOUT = -o
+
+### libraries
+LIBS = -L$(HOME)/lib -L$(MKLROOT)/lib/intel64 -lmkl_scalapack_lp64 -lmkl_blacs_intelmpi_lp64 -lmkl_lapack95_lp64  -lmkl_intel_lp64 -lmkl_intel_thread  -lmkl_core -liomp5 -lpthread $(PROFILE)
+
+
+
+
+

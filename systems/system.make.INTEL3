@@ -1,0 +1,48 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK, etc.
+CPPFLAGS =
+# CPPFLAGS += -D NOMPI
+# CPPFLAGS += -D NOLAPACK
+# CPPFLAGS += -D USE_SYMMETRY
+# CPPFLAGS += -D BLUEGENE
+CPPFLAGS += -D NOScaLAPACK
+#CPPFLAGS += -D TIME
+#CPPFLAGS += -D USE_POINTER_IN_TYPES
+
+##############################################
+## Intel system ##############################
+##############################################
+
+CC         = mpicc
+# CC         =
+CFLAGS     = -O2 -g
+##-I/usr/include/openmpi-x86_64
+
+### serial Fortran compiler and linker
+FC         = mpiifort -warn all
+### parallel Fortran compiler and linker
+MPIFC      = mpiifort -warn all 
+
+ifeq ($(OPENMP),TRUE)
+  MPIFC    += -openmp -openmp-report2
+endif
+
+PROFILE = -pg
+
+### compile flags for production
+CFLAGS_OPT = -r8 -O3 $(PROFILE)
+### compile flags for development
+CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback -warn all
+
+### preprocessor
+CPP    = cpp
+CPPOUT = -o
+
+### libraries
+##LIBS = -lblas -llapack
+LIBS = -L/usr/lib64 -llapack -lblas $(PROFILE)
+
+

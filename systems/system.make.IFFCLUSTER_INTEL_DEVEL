@@ -1,0 +1,85 @@
+# system configuration for compiling juRS code
+
+EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK, etc.
+CPPFLAGS =
+# CPPFLAGS += -D NOOpenMP
+# CPPFLAGS += -D NOMPI
+# CPPFLAGS += -D NOLAPACK
+# CPPFLAGS += -D USE_SYMMETRY
+# CPPFLAGS += -D BLUEGENE
+# CPPFLAGS += -D NOScaLAPACK
+# CPPFLAGS += -D TIME
+
+### Set directory for expat library
+EXPAT = ${HOME}/opt/expat
+
+##############################################
+### Variables to be defined ##################
+###
+### CC             ### C Compiler
+### CFLAGS         ### C Compiler options
+### CPP            ### C-preprocessor
+### CPPOUT         ### its output syntax
+### CPPFLAGS       ### system dependent proprocessing flags
+### FC             ### Fortran Compiler
+### FCFLAGS        ### Fortran Compiler options
+### LDFLAGS        ### Linker options
+### LIBS           ### Libraries and library paths for linking
+###
+##############################################
+
+##############################################
+## IFF Clusters ##############################
+##############################################
+
+
+### C compiler
+CC       = mpicc
+### C compiler options
+CFLAGS   = -O3 -I${EXPAT}/include/
+
+
+### C preprocessor
+CPP      = cpp
+### C preprocessor output option
+CPPOUT   = -o
+### C preporseccor options
+ifeq (,$(findstring NOOpenMP,$(CPPFLAGS)))
+  CPPFLAGS += -D _OPENMP
+endif
+
+
+### Fortran compiler
+FC       = mpiifort 
+### Fortran compiler options
+FCFLAGS = -r8 -O0 -g -pg -CB -traceback -mcmodel=medium         ### For developping/debugging
+#FCFLAGS = -r8 -O3 -ip -ipo -mcmodel=medium -I${MKLROOT}/include ### For production
+ifeq (,$(findstring NOOpenMP,$(CPPFLAGS)))
+  FCFLAGS += -openmp
+endif
+
+
+### Linker options
+LDFLAGS = ${FCFLAGS}
+
+
+### Libraries and library paths for linking
+LIBS := -L${EXPAT}/lib/          ### Add the path to the environmet variable LD_LIBRARY_PATH
+LIBS += -L${MKLROOT}/lib/intel64 ### Add the path to the environmet variable LD_LIBRARY_PATH
+ifeq (,$(findstring NOScaLAPACK,$(CPPFLAGS)))
+  ifeq (,$(findstring NOOpenMP,$(CPPFLAGS)))
+    LIBS += -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_lp64 -lpthread -lm
+  else
+    LIBS += -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lmkl_blacs_intelmpi_lp64 -lpthread -lm
+  endif
+else
+  ifeq (,$(findstring NOOpenMP,$(CPPFLAGS)))
+    LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm
+  else
+    LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm
+  endif
+endif
+
+

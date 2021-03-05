@@ -1,0 +1,18 @@
+comment C in graphite structure
+$a = 2.46857
+$b = $a sqrt 3
+$c = 8.84079
+
+cell $a $b $c
+
+atoms_fractional
+   C  -1:4 -2:6 -1:4
+   C   1:4 -1:6 -1:4
+   C   1:4  1:6 -1:4
+   C  -1:4  2:6 -1:4
+   
+   C  -1:4  0:6  1:4
+   C   1:4  1:6  1:4
+   C   1:4  3:6  1:4
+   C  -1:4  4:6  1:4
+atoms_fractional

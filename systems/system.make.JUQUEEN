@@ -1,0 +1,80 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK, etc.
+CPPFLAGS =
+# CPPFLAGS  += -D NOMPI
+# CPPFLAGS  += -D NOLAPACK
+# CPPFLAGS  += -D NOScaLAPACK
+# CPPFLAGS  += -D NaN_SEARCH
+# CPPFLAGS  += -D BLUEGENE_SHOW_MEMORY
+#CPPFLAGS  += -D BLUEGENE
+#CPPFLAGS  += -D TIME
+CPPFLAGS  += -D USE_KINETIC_MERGED_LOOPS
+
+### profiling switches
+#PROFUSAGE  = -D HPM
+#PROFUSAGE  = -D QPROF -D HPM
+
+#SKIN = skin
+SKIN =
+
+### tuning switches
+#(use fortran intrinsics)  
+#TUNUSAGE = -D USE_DOTPROD -D USE_MATMUL
+#(use blas/essl)
+#TUNUSAGE = -D USE_DDOT -D USE_DGEMM
+
+##############################################
+## BG/Q Rochester DD2 system #################
+##############################################
+
+### system path
+BGSYS = /bgsys/drivers/ppcfloor
+
+### serial Fortran compiler and linker
+FC         = $(SKIN) bgxlf95_r
+### parallel Fortran compiler and linker
+MPIFC      = $(SKIN) mpixlf95_r
+CC         = $(SKIN) mpixlc_r -I$(HOME)/libs/include
+
+### compile flags for production
+CFLAGS_OPT= -qrealsize=8 -O2 -g -qreport -qxflag=diagnostic -qlist=offset -qlistopt -qlistfmt=html=all
+CFLAGS_OPT= -qrealsize=8 -O2 -g 
+CFLAGS_OPT= -qrealsize=8 -O2 -g -qsmp=omp  
+### compile flags for development
+CFLAGS_DEV= -qrealsize=8 -O0 -g -qreport -qxflag=diagnostic -qlist=offset -qlistopt -qlistfmt=html=all
+
+### preprocessor
+CPP    = bgxlc_r -E
+CPPOUT = >
+
+LIBDIR = $(HOME)/libs 
+
+### libraries
+SCAL    = -L$(SCALAPACK_LIB) -lscalapack 
+
+
+#USE LAPACK
+#LAPA    = -L/bgusr/tmaurer2/lib/ -llapack-o3-nosimd -lblas-o3-nosimd
+
+#USE ESSLSMP
+#LAPA    = -L$(LIBDIR) -llapack-cut
+#ESSL    = -L/bglhome/boetiger/math/stable/ -lesslbg
+
+#USE ESSLSMP
+LAPA    =  -Wl,-allow-multiple-definition -L$(LAPACK_LIB) -L/bgsys/local/lib -llapack -lesslbg
+##ESSL    = -L$(LIBDIR)  -lesslsmpbg # -lxlsmp
+
+SYS = -lxlsmp
+
+LIBEXPAT=$(HOME)/libs/lib/libexpat.a
+#HPM     = -L../../../Tools/hpm/ -lhpm
+#QPROF   = -L../../../Tools/qprof/ -lqprof
+#SYS     = -L$(BGSYS)/spi/lib -lSPI_l1p -L$(BGSYS)/bgpm/lib -lbgpm -lxlsmp
+#MPITRACE= -L/bglhome/boetiger/lib -lmpitrace
+#=====================================================================
+LIBS= $(LIBEXPAT) $(ADDITIONAL) $(SCAL) $(LAPA) $(BLAC) $(ESSL) $(QPROF) $(HPM) $(SYS) $(MPITRACE) 
+
+

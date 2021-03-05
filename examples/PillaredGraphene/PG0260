@@ -1,0 +1,34 @@
+###
+### Pillared Graphene
+###
+### unit element with 260 atoms
+###
+
+ngps 96 96 128 
+
+xc PBE
+element  C  2s* 1 .5 2p* 2 .5 3d | 1.3
+
+origin .5 .5 .25
+
+boundary 1
+scale Ang
+cell 18.47231687 18.663745 24.92579
+
+ascale Ang
+atoms coords0260.xyz
+
+scf max 6 min 3 < 1E-7
+
+poisson max 999
+
+pdos sl
+
+mixing 0.05
+
+temp 600 Kel
+
+domains 4 4 8
+
+ 
+$povray_ars = 0.55

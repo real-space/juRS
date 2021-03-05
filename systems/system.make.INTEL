@@ -1,0 +1,47 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK, etc.
+CPPFLAGS =
+# CPPFLAGS += -D NOMPI
+# CPPFLAGS += -D NOLAPACK
+# CPPFLAGS += -D USE_SYMMETRY
+# CPPFLAGS += -D BLUEGENE
+#CPPFLAGS += -D NOScaLAPACK
+#CPPFLAGS += -D TIME
+
+##############################################
+## Intel system ##############################
+##############################################
+
+CFLAGS = -O2 -g
+
+CC = mpicc -cc=icc
+##-I/usr/include/openmpi-x86_64
+
+### serial Fortran compiler and linker
+FC         = ifort -I$$I_MPI_ROOT/intel64/include/ -L$$I_MPI_ROOT/intel64/lib/release -L$$I_MPI_ROOT/intel64/lib/ -lmpi -lmpifort -g 
+### parallel Fortran compiler and linker
+MPIFC      = ifort -I$$I_MPI_ROOT/intel64/include/ -L$$I_MPI_ROOT/intel64/lib/release -L$$I_MPI_ROOT/intel64/lib/ -lmpi -lmpifort -g 
+
+ifeq ($(OPENMP),TRUE)
+##  MPIFC    = mpif90 -openmp -openmp-report2
+endif
+
+#PROFILE = -pg
+
+### compile flags for production
+CFLAGS_OPT = -r8 -O2 -g -traceback 
+CFLAGS_OPT = -r8 -O2 $(PROFILE)
+##CFLAGS_OPT = -fdefault-real-8  -O2 $(PROFILE)
+### compile flags for development
+CFLAGS_DEV = -r8 -O0 -g3 -pg -CB -traceback -debug
+
+### preprocessor
+CPP    = cpp
+CPPOUT = -o
+
+### libraries
+##LIBS = -lblas -llapack
+LIBS =   -L$(MKLROOT)/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lmkl_blacs_intelmpi_lp64  -lpthread -lm -lexpat 

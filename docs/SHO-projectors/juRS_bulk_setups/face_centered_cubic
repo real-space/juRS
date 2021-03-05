@@ -1,0 +1,9 @@
+comment __El__ in fcc structure
+atoms_fractional
+   __El__      0        0        0   
+   __El__      0        0.5      0.5
+   __El__      0.5      0        0.5
+   __El__      0.5      0.5      0
+atoms_fractional
+
+

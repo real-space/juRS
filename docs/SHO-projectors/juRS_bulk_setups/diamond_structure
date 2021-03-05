@@ -1,0 +1,11 @@
+comment __El__ in diamond structure
+atoms_fractional
+   __El__      0        0        0   
+   __El__      0        0.5      0.5
+   __El__      0.5      0        0.5
+   __El__      0.5      0.5      0
+   __El__      0.25      0.25      0.25   
+   __El__      0.25      0.75      0.75
+   __El__      0.75      0.25      0.75
+   __El__      0.75      0.75      0.25
+atoms_fractional

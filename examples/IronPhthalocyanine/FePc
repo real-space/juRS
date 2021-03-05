@@ -1,0 +1,72 @@
+# --------------------------------------
+# juRS v6.06    
+input_comment test calculation for MnPc molecule
+# --------------------------------------
+# all coordinates are given xyz-order
+# keywords may be in arbitrary order
+# --------------------------------------
+
+element  Fe  4s* 2 4p* 3d* 5 1 | 2.2 2.0
+element  C  2s* 2 2p* 2 0 3d | 1.2
+element  N  2s* 2 2p* 3 0 3d | 1.14 1.0 1.09
+element  H  1s* 1 2p | 0.9
+
+nscale 1
+##spacing 0.3
+grid 144 144 64
+
+# extend of the rectangular cell (non-optional)
+cell_size 22 22 10
+
+# scale the cell by a factor
+cell_scale Ang
+
+# specify the convergence parameter set
+## parameter_set light ## default is light
+
+# boundary condition for each direction
+boundary_condition iso iso iso
+
+xc PBE
+
+spin 2
+
+## optimize structure
+##md max 99 < 1E-3
+
+scf min 7 max 256 < 1E-8
+
+## -1 displays states only in .eig file
+$display_states = -1
+
+## visualize wve functions with .bmp-file
+##$visualize_all_wfs = 1
+
+## write smooth density to .xsf-file
+##$xsf_density = 1
+
+# MPI tasks in domain decomposition
+domain_decomposition 2 2 2
+
+# mixing strategy
+##density_mixing 0.01 broyden 9
+density_mixing 0.10 straight   ## converges for ZnPc nonspinpolarized, 0.15 mixing ratio is too high
+##density_mixing 0.05 straight 
+
+eigenstate_solver diis
+##eigenstate_solver sr
+##scf max 12  ## enough to get correct magnetic moment
+##wave_functions max 8 min 1 < 1.0E-4
+
+# use an automatically generated k-point mesh
+kpoint_mesh 1 1 1
+
+# list of atoms in absolute coordinates
+#atoms methan_zero.xyMnPc.xyz
+atoms FePc_zero.xyz
+
+# scale the abolute atomic coordinates by a factor
+atom_scale Ang
+
+# run with --CheckMode first
+

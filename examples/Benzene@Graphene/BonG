@@ -1,0 +1,169 @@
+#
+# Benzene on graphene in cubic cell
+#
+
+### configure PAW data
+element   H   1s* 1 0 2p | 1.0
+element   C   2s* 1 .5 2p* 2 .5 | 1.2
+
+### scale cell size
+scale  Ang
+cell   17.051693790354084    17.228400     20.0
+
+### scale atomic positions
+ascale Ang
+
+### boundary conditions 0:isolated 1:periodic
+boundary  1 1 1
+
+### shift origin
+origin 0.5 0.5 0.0
+
+### real-space domain distribution
+domains  4 4 4
+
+### grid spacing
+spacing 0.2 Ang
+
+### self-consistency convergence criteria
+scf max 300 min 3 < 1E-7
+
+### structural relaxation criteria
+md max 1 min 1 < 1E-4
+ 
+
+### define $z to be the height of the benzene molecule over the film
+$z = 3.24
+
+### benzene molecule given in absolute coordinates
+atoms
+C  7.83424250417704   8.58149394394976   $z   T  T  T
+C  9.21745181061219   8.58149347770197   $z   T  T  T
+C  9.90905553561219   7.38360068729808   $z   T  T  T
+C  9.21745128617704   6.18570605605029   $z   T  T  T
+C  7.83424197974189   6.18570652229808   $z   T  T  T
+C  7.14263825474189   7.38359931270197   $z   T  T  T
+H  7.28798803967704   9.52763443032509   $z   T  T  T
+H  9.76370530883929   9.52763375896040   $z   T  T  T
+H 11.00156380383929   7.38359995303965   $z   T  T  T
+H  9.76370575067704   5.23956556967496   $z   T  T  T
+H  7.28798848151479   5.23956624103965   $z   T  T  T
+H  6.05012998651479   7.38360004696040   $z   T  T  T
+atoms
+
+### graphene film 8x7 given in relative coordinates
+atoms_fractional
+C       0:24   0:14    0   F F F
+C       0:24   2:14    0   F F F
+C       0:24   4:14    0   F F F
+C       0:24   6:14    0   F F F
+C       0:24   8:14    0   F F F
+C       0:24  10:14    0   F F F
+C       0:24  12:14    0   F F F
+C       6:24   0:14    0   F F F
+C       6:24   2:14    0   F F F
+C       6:24   4:14    0   F F F
+C       6:24   6:14    0   F F F
+C       6:24   8:14    0   F F F
+C       6:24  10:14    0   F F F
+C       6:24  12:14    0   F F F
+C      12:24   0:14    0   F F F
+C      12:24   2:14    0   F F F
+C      12:24   4:14    0   F F F
+C      12:24   6:14    0   F F F
+C      12:24   8:14    0   F F F
+C      12:24  10:14    0   F F F
+C      12:24  12:14    0   F F F
+C      18:24   0:14    0   F F F
+C      18:24   2:14    0   F F F
+C      18:24   4:14    0   F F F
+C      18:24   6:14    0   F F F
+C      18:24   8:14    0   F F F
+C      18:24  10:14    0   F F F
+C      18:24  12:14    0   F F F
+C       4:24   0:14    0   F F F
+C       4:24   2:14    0   F F F
+C       4:24   4:14    0   F F F
+C       4:24   6:14    0   F F F
+C       4:24   8:14    0   F F F
+C       4:24  10:14    0   F F F
+C       4:24  12:14    0   F F F
+C      10:24   0:14    0   F F F
+C      10:24   2:14    0   F F F
+C      10:24   4:14    0   F F F
+C      10:24   6:14    0   F F F
+C      10:24   8:14    0   F F F
+C      10:24  10:14    0   F F F
+C      10:24  12:14    0   F F F
+C      16:24   0:14    0   F F F
+C      16:24   2:14    0   F F F
+C      16:24   4:14    0   F F F
+C      16:24   6:14    0   F F F
+C      16:24   8:14    0   F F F
+C      16:24  10:14    0   F F F
+C      16:24  12:14    0   F F F
+C      22:24   0:14    0   F F F
+C      22:24   2:14    0   F F F
+C      22:24   4:14    0   F F F
+C      22:24   6:14    0   F F F
+C      22:24   8:14    0   F F F
+C      22:24  10:14    0   F F F
+C      22:24  12:14    0   F F F
+C       1:24   1:14    0   F F F
+C       1:24   3:14    0   F F F
+C       1:24   5:14    0   F F F
+C       1:24   7:14    0   F F F
+C       1:24   9:14    0   F F F
+C       1:24  11:14    0   F F F
+C       1:24  13:14    0   F F F
+C       7:24   1:14    0   F F F
+C       7:24   3:14    0   F F F
+C       7:24   5:14    0   F F F
+C       7:24   7:14    0   F F F
+C       7:24   9:14    0   F F F
+C       7:24  11:14    0   F F F
+C       7:24  13:14    0   F F F
+C      13:24   1:14    0   F F F
+C      13:24   3:14    0   F F F
+C      13:24   5:14    0   F F F
+C      13:24   7:14    0   F F F
+C      13:24   9:14    0   F F F
+C      13:24  11:14    0   F F F
+C      13:24  13:14    0   F F F
+C      19:24   1:14    0   F F F
+C      19:24   3:14    0   F F F
+C      19:24   5:14    0   F F F
+C      19:24   7:14    0   F F F
+C      19:24   9:14    0   F F F
+C      19:24  11:14    0   F F F
+C      19:24  13:14    0   F F F
+C       3:24   1:14    0   F F F
+C       3:24   3:14    0   F F F
+C       3:24   5:14    0   F F F
+C       3:24   7:14    0   F F F
+C       3:24   9:14    0   F F F
+C       3:24  11:14    0   F F F
+C       3:24  13:14    0   F F F
+C       9:24   1:14    0   F F F
+C       9:24   3:14    0   F F F
+C       9:24   5:14    0   F F F
+C       9:24   7:14    0   F F F
+C       9:24   9:14    0   F F F
+C       9:24  11:14    0   F F F
+C       9:24  13:14    0   F F F
+C      15:24   1:14    0   F F F
+C      15:24   3:14    0   F F F
+C      15:24   5:14    0   F F F
+C      15:24   7:14    0   F F F
+C      15:24   9:14    0   F F F
+C      15:24  11:14    0   F F F
+C      15:24  13:14    0   F F F
+C      21:24   1:14    0   F F F
+C      21:24   3:14    0   F F F
+C      21:24   5:14    0   F F F
+C      21:24   7:14    0   F F F
+C      21:24   9:14    0   F F F
+C      21:24  11:14    0   F F F
+C      21:24  13:14    0   F F F
+atoms_fractional
+

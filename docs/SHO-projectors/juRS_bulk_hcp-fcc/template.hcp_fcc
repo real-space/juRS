@@ -1,0 +1,32 @@
+# juRS
+
+boundary_condition bulk
+poisson fft
+cell_scale Ang
+paw_directory ..
+solver cg
+mixing 0.05
+temperature 1000 Kel
+pdos sl
+
+
+$L = __aLat__
+# L is the fcc cubic lattice constant
+$a = $L sqrt 1:2
+# a is the nearest neighbor distance
+$b = $a sqrt 3
+$c = $a sqrt 24
+cell $a $b $c
+
+grid 12 21 60
+
+### HCP: Layer structure ABABAB
+### FCC: Layer structure ABCABC
+#  
+#  A---C---B---A
+#  |           |
+#  | B   A   C | a
+#  |           |
+#  A---C---B---A
+#    a sqrt 3
+#

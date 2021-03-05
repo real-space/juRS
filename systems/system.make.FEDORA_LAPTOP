@@ -1,0 +1,48 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK, etc.
+CPPFLAGS =
+# CPPFLAGS += -D NOMPI
+# CPPFLAGS += -D NOLAPACK
+# CPPFLAGS += -D USE_SYMMETRY
+# CPPFLAGS += -D BLUEGENE
+CPPFLAGS += -D NOScaLAPACK
+#CPPFLAGS += -D TIME
+
+##############################################
+## Intel system ##############################
+##############################################
+
+CFLAGS = -O2 -g
+
+CC = icc -I/usr/include/openmpi-x86_64
+
+### serial Fortran compiler and linker
+FC         = ifort -g2
+### parallel Fortran compiler and linker
+MPIFC      = ifort -I/usr/include/openmpi-x86_64 
+
+ifeq ($(OPENMP),TRUE)
+  MPIFC    = mpif90 -openmp -openmp-report2
+endif
+
+#PROFILE = -pg
+
+### compile flags for production
+##CFLAGS_OPT = -r8 -O2 -g2 -msse4 -traceback -check bounds -C
+CFLAGS_OPT = -r8 -O2 
+
+##CFLAGS_OPT = -fdefault-real-8  -O2 $(PROFILE)
+### compile flags for development
+##CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback
+CFLAGS_DEV = -r8 -O2 -g 
+
+### preprocessor
+CPP    = cpp -E
+CPPOUT = -o
+
+### libraries
+##LIBS = -lblas -llapack
+LIBS = -L$(MKLROOT)/lib/intel64 $(MKLROOT)/lib/intel64/libmkl_blas95_lp64.a $(MKLROOT)/lib/intel64/libmkl_lapack95_lp64.a -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -liomp5 -lpthread -lm -L/usr/lib64/openmpi/lib -lmpi -lmpi_f90 -lmpi_f77 -lexpat -lstdc++

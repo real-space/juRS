@@ -1,0 +1,609 @@
+\documentclass[12pt,BCOR8mm,noappendixprefix,nochapterprefix,bibtotoc,idxtotoc,openbib,tablecaptionabove]{scrbook} 
+
+%%% at the end of a command definition, for correct spacings
+\usepackage{xspace}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{pgf}
+\usepackage{eurosym}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+%%% footnotes aligned to the text 
+\usepackage[flushmargin]{footmisc} 
+
+%%% when creating DVI or PDF, references, citations and URLs are linked
+\usepackage{hyperref}
+
+%%% allow sidewaystable
+\usepackage[figuresright]{rotating}
+
+%%% create the index at each run
+\makeindex
+
+%%%===========================================
+%%% self-defined commands for the math mode
+%%%===========================================
+
+%% code name
+\newcommand{\juRS}{\texttt{juRS}} %{\texttt{j\"uRS}}
+
+%% useful abbreviations
+\renewcommand{\tt}[1]{\texttt{#1}}
+\newcommand{\m}[1]{\mathrm{#1} }
+\newcommand{\um}[1]{_{\mathrm{#1}} }
+\newcommand{\E}[1]{\cdot 10^{#1}}
+
+%% abbreviation consistent with the PhD-Thesis
+\newcommand{\ADM}{ D^a }
+\newcommand{\PSI}{ \tilde\Psi }
+\newcommand{\RHOV}{ \tilde{n}\um{v} }
+\newcommand{\ttt}[1]{\texttt{#1}}
+
+%%%===========================================
+
+
+\begin{document}
+
+\chapter*{\juRS{} User Manual} \label{sec:MAN}
+
+\setcounter{chapter}{1}
+
+\subsection{Building the Application} \label{sec:MAN_compilation}
+
+
+\juRS{} is a pure \ttt{Fortran} code with coding standards newer than \ttt{FORTRAN90}, i.e.~it
+uses some features of the '95 and 2003 standards. Before compiling, the build directory 
+should contain the following items: \ttt{Makefile}, \ttt{system.make}, \ttt{README} 
+and the directory \ttt{src/} containing the \ttt{.F90} and \ttt{.F95} source files.
+
+The \ttt{Makefile} usually does not need to be changed for building the application. 
+All configurations such as preprocessor, compiler linker and their flags are defined 
+in the architecture-specific include file \ttt{system.make}. If there is an example 
+include file as e.g.\ \ttt{system.make.INTEL}, you can copy that file or use a soft 
+link to it (recommended):\\
+\ttt{  ln -s system.make.INTEL system.make}\\
+For preprocessing the \ttt{.F90} source files, a C-preprocessor (e.g. \ttt{cpp}) is 
+applied. Some source files carry the extension \ttt{.F95}. These source files contain 
+simultaneous code for \ttt{real/complex} and will be preprocessed twice with an 
+additional flag \ttt{R1\_C2}. The first time \ttt{cpp -D R1\_C2=1 \$<} generates the 
+head part of the final \ttt{.f90}-source file with routines that accept \ttt{real} 
+as data type for wave functions, the second time \ttt{cpp -D R1\_C2=2 \$<} generates 
+routines for \ttt{complex} wave functions and the tail part of the preprocessed 
+\ttt{.f90}-file. Each source file contains exactly one module.
+
+The code has been developed for double precision that is activated via the compiler 
+flags (Intel:\ttt{-r8}, IBM:\ttt{-qrealsize=8}). In principle, one could also 
+compile in single precision, for that, \ttt{-D SINGLE\_PRECISION} should be added 
+to the preprocessor flags in order to replace library calls (MPI, LAPACK, ScaLAPACK) 
+with the proper interface.
+
+On the IBM BlueGene class supercomputers and similar architectures, 
+add \ttt{-D BLUEGENE} to the preprocessor flags. Furthermore, the MPI library can 
+be replaced with dummy routines leading to a serial version by defining \ttt{-D NOMPI}. 
+On systems where ScaLAPACK is not installed, \ttt{-D NOScaLAPACK} will replace 
+the ScaLAPACK calls by calls to the corresponding LAPACK routines. \ttt{-D NOLAPACK} 
+can be used for testing the compilation and linking of all the others code parts but 
+does not lead to a fully usable application. \ttt{-D TIME} will show additional 
+timings in the log-output. During development, some additional checks for NaN (Not-a-Number) 
+can be included into the code with \ttt{-D NaN\_SEARCH}. Finally, but not 
+recommended for production runs, the user may want to activate additional and partially 
+also experimental checks and extra outputs in all modules with \ttt{-D DEBUG\_ALL}. 
+\ttt{-D USE\_SYMMETRY} is neccessary for special symmetries of small unit cells 
+that can be exploited when run without domain decomposition.
+
+The binary executable will be called \ttt{./paw}.
+
+\subsection{Get Started} \label{sec:MAN_get_started}
+
+Once the application \ttt{./paw} was successfully compiled and linked, we may 
+start with the help function \ttt{./paw --help} which explains how to generate 
+an example input file and more command line options.
+\begin{verbatim}
+ usage: ./paw  <inputfile>  [options]
+   options:
+   -o   --output [<file>]  redirect output
+   -l   --load             load existing wave functions
+   -L   --Load             load existing density files
+   -ps  --preset <line>    lines read before input file
+   -ov  --override <line>  append line to input file
+        --real             enforce real wave functions
+        --complex          enforce complex wave functions
+   -i   --ignore <arg>     the next arg will not be parsed
+
+   -g   --generate         generate PAW data file
+   -e   --element <Z>      show default element configuration
+   -t   --test <module>    debug function testing modules
+   -cm  --check [<np>]     only check the input file
+        --example          writes an example input file
+   -kw  --keywords         lists all input file keywords
+   -v   --version          shows the version number
+   -h   --help             this usage help
+\end{verbatim}
+
+The first eight of these command line options are parameters which alter the 
+run properties, the others have a toolbox functionality, i.e.~the application 
+will perform the desired action and quit.
+
+\subsection{Input Files} \label{sec:MAN_input_files}
+
+\juRS{} v14.* tries to load the required chemical element specific PAW data stored 
+in \ttt{pawdata.00Z} where \ttt{00Z} is the three-digit atomic number $Z^a$ (integer), 
+e.g.~\ttt{pawdata.047} contains the PAW data for silver. These files are 
+\ttt{ASCII}-formatted. 
+A description of the format can be found in the module \ttt{pawdatafile}.
+
+The system to be calculated is described in a single input file. 
+Three different elements of the input syntax are to be distinguished:
+\begin{itemize}
+ \item Keyword statements \ref{sec:MAN_keyword_statements}
+ \item Variable definitions \ref{sec:MAN_variable_definitions}
+ \item Blocks \ref{sec:MAN_blocks}
+\end{itemize}
+The following subsection will describe each syntax element in detail.
+
+\subsection{Keyword statements} \label{sec:MAN_keyword_statements}
+
+A keyword statement consists of one line in the input file that is 
+lead by the keyword and followed by one or three values, depending on the 
+quantity to be set. Blanks as separation are required here, no equality-sign. 
+Lines starting from \ttt{\#}, \ttt{!} or \ttt{\%} are comments and will be ignored. 
+For all keyword statements, the latter statement will overwrite the earlier. 
+However, multiple mentioning of a keyword will launch a warning. 
+In vector quantities (requiring three values) all vector entries are set to 
+the same value if the keyword is followed only by one value.
+
+A list of all keywords can be found by \ttt{./paw --keywords} or \ttt{./paw -kw}.
+Their syntax is explained further in Table \ref{tab:MAN_keyword_statements}.
+Keywords have a long name, usually containing an underscore which allows
+to write very verbose input files as shown in Section \ref{sec:MAN_example}. However,
+the short versions have the same effect. For reasons of backwards compatibility
+some keywords are also aliased with keyword names of older versions.
+
+\begin{sidewaystable*}
+% \begin{table}
+% \centering
+\begin{tabular}{ l lcl }
+\hline
+ \ttt{<keyword>} & Types & Default & Description \\
+\hline
+ \ttt{ascale  } & r & \ttt{1.0} & scale absolute atomic positions by this factor \\
+ \ttt{bands   } & i & \textbf{[auto]} & total number of bands \\
+ \ttt{bc      } & w [w w] & \ttt{iso iso iso} & boundary condition \{\ttt{isolated},\ttt{periodic}\} \\
+ \ttt{cell    } & i [i i] & \textbf{[required]} & extend of the orthorhombic cell \\
+ \ttt{charged } & r & \ttt{0.0} & additional electrons in the system \\
+ \ttt{comment } & string & & show this string in the output, allows detailed comments or notes \\
+ \ttt{cscale  } & r & \ttt{1.0} & scale \ttt{cell} by this factor \\
+ \ttt{dg      } & i i & \ttt{4 5} & DoubleGrid order $N$ and meshrefinement $M$ \\
+ \ttt{domains } & i [i i] & \ttt{1 1 1} & number of MPI processes for grid parallelization in domain decomposition \\
+ \ttt{efield  } & r [r r] & \ttt{.0 .0 .0} & electric field, only directions where \ttt{bc} is \ttt{isolated} \\
+ \ttt{element } & string & & projector augmented wave configuration, \ttt{paw -e <ChemSym>} shows defaults \\
+ \ttt{grid    } & i [i i] & \ttt{cell}$/$\ttt{spacing} & total numbers of grid points per direction \\
+ \ttt{forces  } & w [w w] & \ttt{on on on} & calculate forces \{\ttt{on},\ttt{yes},\ttt{1},\ttt{off},\ttt{no},\ttt{0}\} \\
+ \ttt{hfield  } & r & \ttt{.000} & magnetic field, shifts local spin-dependent potential by this energy up or down \\
+ \ttt{kmesh   } & i [i i] & [ $32\cdot$\ttt{cell}$^{-1}$ ] & automatic $\vec k$-point sampling in \ttt{periodic} directions \\
+ \ttt{kshift  } & r [r r] & \ttt{.0 .0 .0} & origin shift for \ttt{kmesh} \\
+ \ttt{md      } & crit & & criteria for molecular dynamics or structural relaxation \\
+ \ttt{mixing  } & r [w [i]] & \ttt{0.25} & mixing ratio, method and history length optional \\
+\hline
+\end{tabular}
+\end{sidewaystable*}
+
+\begin{sidewaystable}
+\begin{tabular}{ l lcl }
+\hline
+ \ttt{<keyword>} & Types & Default & Description \\
+\hline
+ \ttt{nfd     } & i [i i] & \ttt{4 4 4} & FiniteDifference order $N\um{fd}$ for KohnSham, Nabla and Poisson \\
+ \ttt{nscale  } & i & \ttt{2} & ratio of potential grid $g\um e$ over the density grid $g\um d$ \\
+ \ttt{spacing } & r & \ttt{0.25 Ang} & grid spacing suggestion (to be adjusted) \\
+ \ttt{origin  } & r [r r] & \ttt{.0 .0 .0} & shift of the coordinate system in fractions of \ttt{cell} \\
+ \ttt{params  } & w & \ttt{light} & choose a set of convergence parameters \{\ttt{light},\ttt{right},\ttt{tight}\} \\
+ \ttt{path    } & w & \ttt{.} & path to the \ttt{pawdata.00Z} files (use $\backslash$ instead of \ttt{/}) \\
+ \ttt{pdos    } & w & \ttt{none} & projected DoS \{ \ttt{alm}, \ttt{al}, \ttt{a}, \ttt{slm}, \ttt{sl}, \ttt{s}, \ttt{z} \} \\
+ \ttt{poisson } & crit & & criteria for iterative solution of the electrostatic equation \\
+ \ttt{scf     } & crit & & criteria for self-consistency iterations \\
+ \ttt{spin    } & w & \ttt{1} & treat electron spin \{\ttt{1},\ttt{integrated},\ttt{polarized},\ttt{2}\} \\
+ \ttt{solver  } & w & \ttt{diis} & eigensolver method or scheme \{\ttt{diis},\ttt{cg},\ttt{sr},\ttt{speed},\ttt{stable}\} \\
+ \ttt{symmetry} & w & \ttt{none} & do not use! \\
+ \ttt{temp    } & r & \ttt{.001 Ha} & electronic smearing temperature \\
+ \ttt{units   } & w [w] & \ttt{Ang eV} & output units \{ \ttt{aB}, \ttt{Ang}, \ttt{nm}, \ttt{pm} \} and \{ \ttt{Ha}, \ttt{eV}, \ttt{Ry}, \ttt{kJ}, $\dots$ \} \\
+ \ttt{wfs     } & crit & \ttt{1 1 1E-4} & criteria for eigensolver iterations \\
+ \ttt{xc      } & w & \ttt{PZ} & exchange-correlation functionals \{\ttt{VWN},\ttt{PZ},\ttt{PBE}\} \\
+\hline
+\end{tabular}
+
+%   cell_size             [cell]
+%   grid_spacing          [spacing]
+%   grid_points           [grid]
+%   parameter_set         [params]
+%   boundary_condition    [bc]
+%   domain_decomposition  [domains]
+%   number_of_bands       [bands]
+%   spin_polarization     [spin]
+%   density_mixing        [mixing]
+%   shift_origin          [origin]
+%   additional_charge     [charged]
+%   self_consistency      [scf]
+%   cell_scale            [cscale]
+%   get_forces            [forces]
+%   fermi_temperature     [temp]
+%   double_grid           [dg]
+%   atom_scale            [ascale]
+%   finite_difference     [nfd]
+%   eigenstate_solver     [solver]
+%   element               [element]
+%   electric_field        [efield]
+%   magnetic_field        [hfield]
+%   poisson_solver        [poisson]
+%   fix_symmetry          [symmetry]
+%   exchange_correlation  [xc]
+%   unit_system           [units]
+%   molecular_dynamic     [md]
+%   paw_directory         [path]
+%   projected_dos         [pdos]
+%   wave_functions        [wfs]
+%   grid_multiplier       [nscale]
+%   kpoint_mesh           [kmesh]
+%   kpoint_shift          [kshift]
+
+%%% long keywords ordered after the short ones
+% atom_scale           
+% number_of_bands      
+% boundary_condition   
+% cell_size            
+% additional_charge    
+% cell_scale           
+% double_grid          
+% domain_decomposition 
+% electric_field       
+% element              
+% grid_points          
+% get_forces           
+% magnetic_field       
+% kpoint_mesh          
+% kpoint_shift         
+% molecular_dynamic    
+% density_mixing       
+% finite_difference    
+% grid_multiplier      
+% grid_spacing         
+% shift_origin         
+% parameter_set        
+% paw_directory        
+% projected_dos        
+% poisson_solver       
+% self_consistency     
+% spin_polarization    
+% eigenstate_solver    
+% fix_symmetry         
+% fermi_temperature    
+% unit_system          
+% wave_functions       
+% exchange_correlation 
+
+
+\caption{Keywords and their syntax. The required key word \texttt{cell} has no default values
+since the application will not run without its specification. The types are abbreviated 
+as i:integer, r:real numbers and w:words. Type crit stands for the input syntax of 
+convergence criteria which are specified e.g. \texttt{poisson max 333 min 3 < 1E-7} 
+for the max.\ and min.\ number of iterations and the convergence threshold. 
+Default values depend on the \texttt{params} setting.}
+\label{tab:MAN_keyword_statements}
+\end{sidewaystable}
+
+\subsection{Variable definitions} \label{sec:MAN_variable_definitions}
+
+\juRS{} is equipped with a built-in variable environment that helps to 
+generate flexible input files. All variables are scalar real values. 
+To define a variable yourself, simply write \ttt{\$<var> = <expression>} in one line. 
+Here, \ttt{<var>} stands for a variable name of your choice, max.~32 characters long. 
+The usual identifier for variables is the dollar sign \ttt{\$}. This may lead to 
+interference with script languages, so one may use \ttt{@} instead. The blanks to the 
+left and right of \ttt{=} are important. A line that reads \ttt{\$<var>} only will show 
+the variable's value in the output. Here, \ttt{<expression>} must a float value, 
+a fractional value (with \ttt{:}), a predefined constant \ttt{<cst>} 
+(see Table \ref{tab:MAN_predefined_constants}), a defined variable, a function of 
+values or a math operation. Valid math operators are 
+\ttt{+}, \ttt{-}, \ttt{*}, \ttt{:} , \verb+^+ (or \verb+**+). 
+The backslash for divisions cannot be used. No operator between two 
+words means multiplication. Operators only lead to valid expressions in a 
+context \ttt{<value> <operator> <value>}. The minus sign therefore cannot be 
+used as a unary operator or function, please use \ttt{0 - \$<var>} instead. 
+Valid functions are \ttt{exp}, \ttt{cos}, \ttt{sin}, \ttt{abs}, \ttt{sqrt} and \ttt{log}. 
+Functions lead to valid expressions in a context \ttt{[<prefactor>] <function> <argument>}. 
+An expressions may only consist of up to three strings. The usage of parenthesis is not supported. 
+A string as \ttt{a:b} without blanks before and after the 
+colon operator \ttt{:} will be interpreted as fractional number $\frac a b$.
+
+\begin{table}
+\centering
+\begin{tabular}{ l lll }
+\hline
+ \ttt{<cst>} &    &  Internal Value &  Name  \\
+\hline
+ \ttt{Ang}   & \AA{}     & 1.8897261247728  & \AA{}ngstr\"om\\
+ \ttt{nm}    & nm        & 18.897261247728  & nanometer     \\
+ \ttt{pm}    & pm        & 0.0188972612477  & picometer     \\
+ \ttt{Pi}    & $\pi$     & 3.1415926535898  &               \\
+ \ttt{Deg}   & $\frac{2\pi}{360}$ & 0.0174532925199 & degrees, $^\circ$ \\
+ \ttt{sqrth} & $1/\sqrt{2}$ & 0.7071067811865 &                \\
+ \ttt{sqrt2} & $\sqrt 2$ & 1.4142135623731 &                \\
+ \ttt{sqrt3} & $\sqrt 3$ & 1.7320508075689 &                \\
+ \ttt{sqrt5} & $\sqrt 5$ & 2.2360679774998 &                \\
+%  \ttt{sqrt6} & $\sqrt 6$ & 2.4494897427832 &                \\
+%  \ttt{sqrt7} & $\sqrt 7$ & 2.6457513110646 &                \\
+%  \ttt{sqrt8} & $\sqrt 8$ & 2.8284271247462 &                \\
+ \ttt{Kel}   & K         & $3.1668294\E{-6}$& Kelvin        \\
+ \ttt{eV}    & $e$V      & 27.210282768626  & eVolt         \\
+ \ttt{meV}   & m$e$V     & 0.0272102827686  & milli eVolt    \\
+ \ttt{Ry}    & Ry        & 2                & Rydberg       \\
+ \ttt{Ha}    & Ha        & 1                & Hartree       \\
+ \ttt{aB}    & Bohr      & 1                & Bohr radius   \\
+\hline
+\end{tabular}
+\caption{Predefined constants for easy input.}
+\label{tab:MAN_predefined_constants}
+\end{table}
+
+
+\subsection{Blocks} \label{sec:MAN_blocks}
+
+To input a list of dynamic length, blocks are defined by block keywords. 
+A line containing only the block keyword opens the block or closes the block, 
+depending on the application's previous state. In between block opening/closing keywords, 
+block items are added to the corresponding list. 
+Blocks are implemented for atoms and $\vec k$-points: Block keywords are
+\begin{itemize}
+ \item \ttt{kpoints} $\vec k$-points for Brillouin zone sampling $x \ y \ z \ w$
+ \item \ttt{kpath} edges for a band structure path sampling $x \ y \ z$
+ \item \ttt{atoms} for absolute atomic positions $Z \ x \ y \ z \ [m_x \ m_y \ m_z \ \sigma]$
+ \item \ttt{atoms\_fractional} for relative positions $Z \ \frac{x}{L_x} \ \frac{y}{L_y} \ \frac{z}{L_z} \ [m_x \ m_y \ m_z \ \sigma]$
+\end{itemize}
+where $Z$ may be either the atomic number (\ttt{integer}) or the 
+chemical symbol (e.g. \ttt{Mg} instead of \ttt{12}, element symbols are case sensitive). 
+$L_i$ with $i \in \{x,y,z\}$ are the extends of the orthorhombic cell (see \ttt{cell}). 
+For the input of atoms, we may optionally add three logic values $m_i \in \{$\ttt{T},\ttt{F}$\}$ for geometry relaxations. 
+The default $m_i$ is \ttt{T}, so atoms are usually free to move. 
+If the three $m_i$ are defined, the user may also define a spin-flip number $\sigma \in [-1,1]$. If the element data contain 
+a magnetic orbital occupation (run \ttt{grep PartialWave pawdata.*} to reassure a different occupation of \ttt{up} and \ttt{dn}), 
+the spin-flip number $\sigma$ determines the sign of the magnetization of the inital orbitals in a spin-resolved calculation. 
+Default $\sigma$ is \ttt{+1}.
+
+A single block keyword followed by the name of an existing external file will open the file 
+and try to read block items from it.\\
+Useful examples: \ttt{atoms coords.xyz} or \ttt{kpoints kpts}
+
+In order to check the input file for syntax and perform some quick analysis of the atomic geometry 
+we can run with \ttt{--CheckMode} (most useful in serial). 
+Invoke the executable as \ttt{./paw <inp> --CheckMode} or \ttt{-cm} where \ttt{<inp>} is your input file. 
+Then search the output for the occurrence of \ttt{WARNING!}. For the distribution of parallel MPI processes, 
+we add a positive integer, i.e.~\ttt{--CheckMode <np>}, which stands for the total number of processes. 
+The output will show how the parallelization would factorize this number.
+
+A continued calculation may load existing densities (\ttt{--Load}) and/or wave functions (\ttt{--load}) 
+from the file system. See the following Section \ref{sec:MAN_output_files} for a detailed description.
+
+
+\subsection{Output Files} \label{sec:MAN_output_files}
+
+The name of the input file is the project name. 
+All non-temporary output files will have the same name as the 
+project plus an extension that depends on the type of output. 
+Usual file name extensions are
+\begin{itemize}
+ \item \ttt{.dos} Density of states (\ttt{ASCII}) %, see \ref{sec:TEC_density_of_states} and \ref{sec:TEC_projected_density_of_states}
+ \item \ttt{.bst} Plotable band structure (\ttt{xmgrace} v5.0+)
+ \item \ttt{.frc} Atomic positions and forces (\ttt{ASCII} in atomic units)
+ \item \ttt{.adm} Atomic density matrices $\ADM_{ij\sigma}$ (\ttt{ASCII})
+ \item \ttt{.rho} Smooth valence density $\RHOV^\sigma(\vec r)$ (\ttt{binary})
+ \item \ttt{.wfs} Smooth valence wave functions $\PSI_{n\sigma \vec k}(\vec r)$ (\ttt{binary})
+\end{itemize}
+In \ttt{CheckMode} some more files for the visualization are created
+\begin{itemize}
+ \item \ttt{.xyz} Atomic positions (\ttt{ASCII} in \AA)
+ \item \ttt{.pov} Geometry for \ttt{povray} (\ttt{ASCII})
+\end{itemize}
+
+Both types of binary files (density and wave functions) are created by \ttt{MPI}-collectives 
+that write files in \ttt{BIG ENDIAN}. A leading header of $1024$ Bytes proceeds the data arrays. 
+The header is encoded in \ttt{ASCII} and holds information about the calculation such as file name, 
+stored quantity, numbers of grid points, cell extends, number of bands, number of spins, 
+number of $\vec k$-points and a time-stamp of the file generation time. 
+When densities are to be loaded, the number of grid points needs to match 
+the number of grid points specified in the density file. Significant deviations of the 
+cell sizes will launch \ttt{WARNING!}s. For loading wave functions, the number of bands, 
+spins and $\vec k$-points found in the file may be larger than the requested number, however, this will also be warned.
+
+\subsection{Global Application Configuration} \label{sec:MAN_configuration}
+
+Most configurations are defined in \ttt{mod\_configurations.F90} 
+and, if necessary, have to be adjusted before compiling.
+
+\subsection{Limitations} \label{sec:MAN_limitations}
+
+The restriction to nearest-neighbor communication during data-exchange introduces a limitation. 
+The lower limit for the number of grid points per domain is the number of 
+finite-difference neighbors $N_{fd}$ used for the kinetic energy stencil in the Kohn-Sham Hamiltonian. 
+This defines a lower boundary to the parallelization in domain decomposition. 
+The finite-difference order of the Laplacian in the Poisson equation of the electrostatic 
+part may be twice as large since the density grid contains at least twice the number of 
+grid points per direction in each domain compared to the wave function grid. 
+The syntax for controlling $N_{fd}$ is explained in Table \ref{tab:MAN_keyword_statements} (\ttt{nfd}).
+
+% The keyword \ttt{pawpath} may only specify a direct subdirectory of the current working 
+% directory or the parent directory by specifying \ttt{pawpath ..}. 
+% This is due to a conflict with the meaning of \ttt{\}-characters in the input file.
+
+% \newpage
+\subsection{Example input} \label{sec:MAN_example}
+Run \ttt{./paw --example} to get a simple example input file. 
+Fur further practice with the variable environment, look at this example: create a file called \ttt{inp} with this content:
+
+\begin{verbatim}
+cell 12 Ang
+
+$r = 76 pm
+$a = 45 Deg
+$x1 = $r cos $a
+$y1 = $r sin $a
+$x2 = 0 - $x1
+$y2 = 0 - $y1
+
+atoms
+Li  $x1  $y1  0.0
+Li  $x2  $y2  0.0
+atoms
+\end{verbatim}
+
+Now invoking \ttt{./paw inp --CheckMode} or equivalently \ttt{./paw inp -cm} tells 
+the user that \ttt{./pawdata.003 } could not be found. Re-running \ttt{./paw inp -cm --gen } generates 
+a PAW data file for Lithium with the default PAW configuration for this species 
+if extended features are activated in your version. Check \ttt{./paw -e Li } to see the 
+default PAW configuration string for Lithium. 
+Running again \ttt{./paw inp -cm} performs a check of the geometry specified in the input file \ttt{inp}. 
+To start the calculation, remove the CheckMode flag \ttt{-cm}. 
+The file name does not need to be \ttt{inp} but \ttt{inp} is a placeholder for the project name. 
+The input file of a project carries the project name \ttt{<projectname>} only. 
+Any output file will be named \ttt{<projectname>.<ext>} where the file extension \ttt{<ext>} depends on the kind of output.
+
+% \vspace{.5cm}
+% 
+
+% \noindent \textbf{Feedback is strongly acknowledged:} \href{mailto:juRS_bug_report@fz-juelich.de}{juRS_bug_report@fz-juelich.de}\\
+\vspace{.5cm}
+\noindent Version 14.03 (2014-03-04) juRS\_bug\_report@fz-juelich.de
+% Please check \url{http://www.real-space.de/~pbaum/} for updates.
+
+\newpage
+%%% Manual for PAW data architects:
+\subsection*{PAW generation}
+
+The configuration string for the details of the PAW data set should be 
+specified in each input file to make sure the results are the same.
+This string contains information about the inital occupation numbers 
+in the atomic self-consistent calculation, numbers of projectors in each $\ell$
+and the states which contribute to the frozen core density. 
+Finally, also the augmentation radii (may vary slightly with $\ell$) are specified.
+For example Stronium will appear as
+\begin{verbatim}
+element  Sr  4s 2 5s 2 4p* 6 4d | 2.44
+\end{verbatim}
+The keyword \ttt{element} expects an element symbol (like \ttt{Sr}, case-sensitive) 
+or an integer atomic number. The symbol or atomic number is followed by the electronic 
+configuration string. Here, the orbital specifyer \ttt{4s} sets the 4$s$-state to be 
+included in the set of valence states. Automatically, 1$s$, 2$s$ and 3$s$ are set to 
+be core states. The following \ttt{2} is an occupation number for the all-electron 
+self-consistent atomic calculation, interpreted as float 2.0.
+If no occupation number is given, the occupation is zero, if a single number is given, 
+both spin-channels are given half of the occupation and if two numbers are specified, 
+we may define a magnetization, as e.g.~in the $d$-cannel of Osmium.
+\begin{verbatim}
+element  Os  6s* 2 5p 6 6p 5d 5 1 | 2.55 2.64 2.35
+\end{verbatim}
+A second valence orbitals with the same $\ell$ as in \ttt{element  Sr  4s 2 5s 2} [...] 
+effects that two partial waves are used for this $\ell$.
+A second partial wave without an extra orbital can also be added by 
+a star as in \ttt{element  Os  6s* 2} [...].
+Here, an energy derivative is used as an unorthogonalized start guess for the second partial wave.
+Note that \ttt{element  Sr  4s 2 5s*} or \ttt{element  Sr  4s* 2 5s} would activate a 
+third set of partial waves and projectors which is not recommended.
+The example of Osmium shows how different augmentation radii for $s$, $p$, $d$, ...~are specified after the \ttt{|}.
+The radii are always given in \ttt{Bohr} atomic units, multiplyiers like \ttt{Ang} cannot be used here!
+When a magnetization is induced in the occupation numbers, 
+please make sure that the first number is the majority spin as e.g. \ttt{5d* 5 1}.
+A spin-polarized atomic all-electron calculation will be performed, 
+if spin is activated in the input file and any orbitals occupation 
+number differs in $\uparrow$ vs.~$\downarrow$.
+
+When a \ttt{pawdata.00Z} file is generated (always in \ttt{./} in constrast to 
+reading the file during the code execution where we can specify a path to find 
+the \ttt{pawdata}-files), there is a possiblity to store the self-consistent potential. 
+Create a folder \ttt{pot/} in the current work directory before the generation. 
+A file \ttt{rV.00Z} with the local spherically symmetric potential $r \cdot V(r)$ is 
+output to this folder and re-used in a later generation process.
+
+When you want to compare the logarithmic derivatives of the true and of the augmented 
+potential in your newly generated PAW data set, run the generation combined with the CheckMode 
+which is activated by the command line option \ttt{-cm 2} (or higher integers). 
+Look for the file \ttt{Sy\_logder} with \ttt{Sy} being the corresponding element symbol. 
+Furthermore, when \ttt{pawdata.00Z} is present and a folder \ttt{partial\_waves/} 
+is detected running with \ttt{-cm 2}, the radial representation of projectors, 
+true and smooth partial waves is written to separate plotable files in this folder.
+
+
+\subsection*{Usage of xml PAW setups}
+It is possible to load PAW setups in xml format (extened markup language) defined here:\\
+\url{https://wiki.fysik.dtu.dk/gpaw/setups/pawxml.html}\\
+To use the xml PAW setups invoke 
+the program with the \ttt{-xml} flag. \ttt{./paw copper -xml}
+Just after loading, informations about the pseudopotential are printed to standard output. 
+The program looks for xml files with name \ttt{pawdata.0xx.xml} for element number \ttt{xx}.
+ 
+
+\subsection*{Check of the PAW setup}
+When invoking the applicaiton in CheckMode, the PAW setups are checked. 
+The logarithmic derivative is computed before ad after projector filtering 
+and the spherically symmetric PAW hamiltonian is diagonalized. 
+This allows to check quickly if the pseudopotential has ghost states.
+For example \ttt{./paw copper -xml -cm 2} or \ttt{./paw copper -cm 2}
+
+\subsection*{SoftSwitches}
+As mentioned above, there is a variable environment such that the user 
+may define variables and use them in the input but also everywhere 
+in the code after the input files are parsed.
+Therefore, SoftSwitches are used to control add-on features of the code, such as
+\ttt{\$visualize\_all\_wfs = 1} write a phase-to-color-coded \ttt{.bmp}-file for each wave 
+function and each $x$-$y$-plane of grid points.
+Similarly, \ttt{\$visualize\_all\_wfs\_x = 1} and \ttt{\$visualize\_all\_wfs\_y = 1} 
+work for $y$-$z$-planes and $x$-$z$-planes, respectively, but require more memory.
+
+The SoftSwitch \ttt{\$indep = 8} allows a parallel calculation of 8 different 
+lattice parameters around the one defined in \ttt{cell\_size}.
+The step size is controlled by \ttt{\$bulk} which defaults to $0.01$, i.e.~one percent, 
+so will \ttt{\$indep = 8} calculate from -$3\%$ to +$4\%$ in steps of $1\%$.
+Using less than \ttt{\$indep = 4} parallel independent calculations will fail 
+to fit a cubic curve and also the parabola fit will be fully determined.
+
+The SoftSwitch \ttt{\$xsf\_density = 1} write a \ttt{.xsf}-file of the structure with 
+a three-dimensional data grid of the smooth density.
+This action is performed instead of starting a calculation and an existing density file is required.
+Internally, one may switch \ttt{\$xsf\_max\_z\_dist = 13.3} to limit the density 
+in $z$-direction e.g.~by $13.3\,\m{Bohr}$ and \ttt{\$xsf\_use\_norm = 1} to 
+scale the density down by the cell volume.
+
+After the self-consistency cycles have reached convergence or the 
+maximum number of iterations the Kohn-Sham eigenvalues are displayed in 
+the output unless there are more than $1000$. 
+Change this limit by defining \ttt{\$display\_states} with a positive 
+or negative integer value. 
+For the display in the output, only the absolute value counts. 
+Zero or negative values will cause a file \ttt{<project>.eig} 
+to be created with a detailed list of all eigenvalues.
+
+The SoftSwitch \ttt{\$write\_wfs} defaults to $1$ when not specified. 
+Specifying it with zero or negative values will disable the output
+of the Kohn-Sham wave functions at the end of a calculation.
+
+
+\section*{Minimal Executable}
+Depending on the circumstances of the computer system it can be useful to
+have a small executable file \ttt{./paw}. In particular in the case of statically linked
+binaries the preprocessor option \ttt{-D EXTENDED} should not be defined.
+This omits a large set of test functionality and a number of add-on modules
+which are not needed during production runs, including the build-in
+PAW data generation and the module self-tests.
+
+
+% \bibliography{references}
+% \bibliographystyle{unsrt}
+
+% \printindex
+% \listoffigures
+
+% \setlength{\parindent}{0pt} 
+% \cleardoublepage \thispagestyle{empty}
+
+\end{document}

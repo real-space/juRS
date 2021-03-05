@@ -1,0 +1,21 @@
+### GeSbTe alloy
+
+cell_scale        6.04 Ang
+atom_scale        6.04 Ang
+
+boundary          bulk
+grid_spacing      0.18876 Ang
+
+get_forces        no
+kpoint_mesh       1
+grid_multiplier   1
+self_consistency  max 2 min 2 < 1E-7
+density_mixing    0.01
+fermi_temperature 999 Kel
+projected_dos     sl
+
+element  Ge  4s* 2 4p* 2 4d | 1.8
+element  Sb  5s* 2 5p* 3 5d | 2.5
+element  Te  5s* 2 5p* 4 5d | 2.2
+
+paw_directory     ..

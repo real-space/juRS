@@ -1,0 +1,30 @@
+# Sodium Cloride
+
+cell   16 12 12
+spacing 0.4 
+
+
+#rotation symmetry along the x-axis
+symmetry xrot
+
+boundary iso
+
+
+scf max 33 min 3 < 1E-6
+
+mixing  0.20
+
+
+# forces in x-direction
+forces 1 0 0
+
+$d = 2.802 Ang
+$x1 = -.5 $d
+$x2 =  .5 $d
+
+atoms
+Na   $x1 0 0  
+Cl   $x2 0 0      
+atoms
+
+nscale 1

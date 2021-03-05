@@ -1,0 +1,96 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+###
+# always run first:
+### module load XL
+###
+
+### switch this on to switch off MPI (and or LAPACK)
+CPPFLAGS =
+CPPFLAGS += -D NOMPI
+# CPPFLAGS += -D NOLAPACK
+# CPPFLAGS += -D USE_SYMMETRY
+# CPPFLAGS += -D BLUEGENE
+# CPPFLAGS += -D NOScaLAPACK
+CPPFLAGS += -D TIME
+
+
+##############################################
+## IBM Power 7 system ########################
+##############################################
+FC         = /opt/ibmcmp/xlf/13.1/bin/xlf95_r
+#MPIFC      = /opt/openmpi/xl/1.5.4/bin/mpixlf90_r
+MPIFC      = /opt/ibmcmp/xlf/13.1/bin/xlf95_r
+
+CFLAGS_OPT = -O3 -qarch=pwr7 -qtune=pwr7 -qrealsize=8 
+CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback
+
+CPP    = xlc -E
+CPPOUT = > 
+LIBS = -L /home/homberg/lib/atlas/lib -lblas -llapack -lscalapack -pg
+LIBS = -L/home/homberg/lib/atlas/lib -llapack -lscalapack -pg
+##############################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ###############################################
+# ## JUGENE and JUMP compiler  ##################
+# ###############################################
+# FC         = xlf90_r -O3 -qhot
+# MPIFC      = mpxlf90_r -O3 -qhot
+# DEBUGFLAGS =
+# CFLAGS     = -qrealsize=8 -qfree=f90 -q64
+# LIBS  =
+# ###############################################
+
+
+# ###############################################
+# ## JUGENE and JUMP preprocessor ###############
+# ###############################################
+# CPP    = xlc -E -+
+# CPPOUT = >
+# ###############################################
+
+
+
+# ###############################################
+# ### JUBL IBM XL compilers #####################
+# ###############################################
+# #
+# BGLSYS = /bgl/BlueLight/ppcfloor/bglsys
+# #
+# # LIBS_F_MPI = -lmpich.rts -lfmpich.rts -lmsglayer.rts -lrts.rts -ldevices.rts
+# # LIBS = -lmpich.rts -lfmpich.rts -lmsglayer.rts -lrts.rts -ldevices.rts
+# #
+# FC = xlf90 -qrealsize=8 -qfree=f90 -q64
+# MPIFC = mpxlf90 -qrealsize=8 -qfree=f90 -q64
+# CFLAGS     = -g -I$(BGLSYS)/include -L$(BGLSYS)/lib -qarch=440d -qtune=440
+# #################################################
+
+
+##############################################
+## GNU Fortran compiler ######################
+##############################################
+#FC         = gfortran
+#MPIFC      = mpif90
+#CFLAGS     = -fdefault-real-8 -ffree-form -ffree-line-length-0
+#LIBS  = -llapack
+##############################################
+

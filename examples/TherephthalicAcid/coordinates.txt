@@ -1,0 +1,138 @@
+#@ START of RUNPAR
+#
+ terephthalic_acid_onto_Cu110 7 Cu layers plus 2 molecules
+# 
+p-orthorhombic                      unit cell: primitive cubic
+  ci     1                          spgm, nse: symmetry specification
+#  d2h    1                          spgm, nse: symmetry specification
+a    degree                         units : angstroem and degree
+#  coresponds to a cubic lattice : 3.64168245 A
+ 34.000000   5.15012  3.64168      cell in angstroem a1,a2,a3
+#7*a*sqrt(2) a*sqrt(2)  a           a_1, a_2, a_3  ~6.6 Ang vacuum
+ 90.000     90.000     90.000       angle : well defined by f-cubic
+  1.000      1.000      1.000       scaling of the unit cell
+#@ bltv  1    64.250714     0.000000     0.000000
+#@ bltv  2     0.000000     9.732320     0.000000
+#@ bltv  3     0.000000     0.000000     6.881781
+#
+    48    4                         natom, nkatom
+#---------------------------------------------------------------------
+atom kind    1:   14       4411       natknd,ipsp,ipsphm,ipcc,ipschg   
+                   3    6  2s2p2d     lloc,ndydak,idydel,idydl
+  zatom=   29.00000     zval=   11.00000
+      34.000000       4.00000000    2.00000000     denominators
+#
+#first coordinate is Z cartesian (Angstrom), the next two are BLTV       
+#-------------layer 1 (where the origin is)
+  1    0.00000000    1.00000000    0.00000000   iatiff,tau    1
+  1    0.00000000   -1.00000000    0.00000000   iatiff,tau    2
+#-------------layer 2 plus inv
+  1    1.26575200   -2.00000000   -1.00000000   iatiff,tau    3
+  1   -1.26575200    2.00000000    1.00000000   iatiff,tau    4
+  1    1.26575200    0.00000000   -1.00000000   iatiff,tau    5
+  1   -1.26575200    0.00000000    1.00000000   iatiff,tau    6
+#-------------layer 3 plus inv
+  1    2.59957200    1.00000000    0.00000000   iatiff,tau    7
+  1   -2.59957200   -1.00000000    0.00000000   iatiff,tau    8
+  1    2.59957200   -1.00000000    0.00000000   iatiff,tau    9
+  1   -2.59957200    1.00000000    0.00000000   iatiff,tau   10
+#-------------layer 4 plus inv
+  1    3.75734000   -1.99353200   -1.00056000   iatiff,tau   11
+  1   -3.75734000    1.99353200    1.00056000   iatiff,tau   12
+  1    3.73381200   -0.00444800   -0.99836400   iatiff,tau   13
+  1   -3.73381200    0.00444800    0.99836400   iatiff,tau   14
+#---------------------------------------------------------------------    
+#
+#from now ... all the coordinates are cartesian Z Y X (Angstrom)
+#
+atom kind    2:   16       4411     natknd,ipsp,ipsphm,ipcc,ipschg   ! 
+                   2    4  2s2p     lloc,ndydak,idydel,idydl
+  zatom=    6.00000     zval=   4.00000         C_atoms
+       34.000000    5.15012       3.64168      denominators
+  1    6.28932000   -1.25742240   -1.81606940   iatiff,tau   15
+  1   -6.28932000    1.25742240    1.81606940   iatiff,tau   16
+  1    7.76580400   -1.24308961   -1.81231847   iatiff,tau   17
+  1   -7.76580400    1.24308961    1.81231847   iatiff,tau   18
+  1    8.46729200   -0.13407307   -1.29489401   iatiff,tau   19
+  1   -8.46729200    0.13407307    1.29489401   iatiff,tau   20
+  1    8.48714800   -2.34083254   -2.32787111   iatiff,tau   21
+  1   -8.48714800    2.34083254    2.32787111   iatiff,tau   22
+  1    9.86931600   -0.12279946   -1.29168569   iatiff,tau   23
+  1   -9.86931600    0.12279946    1.29168569   iatiff,tau   24
+  1    9.88641800   -2.32739073   -2.32485580   iatiff,tau   25
+  1   -9.88641800    2.32739073    2.32485580   iatiff,tau   26
+  1   10.59120400   -1.22233463   -1.80603293   iatiff,tau   27
+  1  -10.59120400    1.22233463    1.80603293   iatiff,tau   28
+  1   12.06806200   -1.27061186   -1.81064330   iatiff,tau   29
+  1  -12.06806200    1.27061186    1.81064330   iatiff,tau   30
+#---------------------------------------------------------------------
+atom kind    3:    8       4411     natknd,ipsp,ipsphm,ipcc,ipschg   ! 
+                   2    4  2s2p     lloc,ndydak,idydel,idydl
+  zatom=    8.00000     zval=   6.00000         O_atoms
+       34.000000    5.15012       3.64168      denominators
+  1    5.70367000   -2.44878936   -1.84941626   iatiff,tau   31
+  1   -5.70367000    2.44878936    1.84941626   iatiff,tau   32
+  1    5.68085600   -0.07760716   -1.78785002   iatiff,tau   33
+  1   -5.68085600    0.07760716    1.78785002   iatiff,tau   34
+  1   12.75887400   -2.35722022   -1.84039582   iatiff,tau   35
+  1  -12.75887400    2.35722022    1.84039582   iatiff,tau   36
+  1   12.63300600   -0.00986763   -1.79296294   iatiff,tau   37
+  1  -12.63300600    0.00986763    1.79296294   iatiff,tau   38
+#---------------------------------------------------------------------
+atom kind    4:   10       0000     natknd,ipsp,ipsphm,ipcc,ipschg
+                   0    0  0s0p     lloc,ndydak,idydel,idydl
+  zatom=    1.00000     zval=   1.00000               H-atom
+       34.000000      5.15012       3.64168      denominators
+  1    7.89170600    0.73421656   -0.88678914   iatiff,tau   39
+  1   -7.89170600   -0.73421656    0.88678914   iatiff,tau   40
+  1    7.92961600   -3.21971082   -2.73632922   iatiff,tau   41
+  1   -7.92961600    3.21971082    2.73632922   iatiff,tau   42
+  1   10.41566200    0.76038432   -0.87635573   iatiff,tau   43
+  1  -10.41566200   -0.76038432    0.87635573   iatiff,tau   44
+  1   10.47179600   -3.19076715   -2.72778584   iatiff,tau   45
+  1  -10.47179600    3.19076715    2.72778584   iatiff,tau   46
+  1   13.67027800   -0.22826877   -1.78889154   iatiff,tau   47
+  1  -13.67027800    0.22826877    1.78889154   iatiff,tau   48
+#---------------------------------------------------------------------
+#
+ 276        0.001                   zvtot, tkb
+# 
+ 90   01 1.00d-04 3                 itmax, itmin, coneps, whateps
+ 474    03   1.d-10 03 -1.0         ndvdim,itdvmx,epsdvd,itd1st,eps1st
+        05   15                     itcgin,itcgmx
+0.150000   0.000000                 mixing parameter for charge and spin
+  30                                itdept for broyden jacobian
+# 
+  5.000      0.500      2.50000     gmax, gmaxft,gmaxqp
+    4   0.000    0.0    0.0         nclmfe, gmaxmfe, epsmfe, tolmfe
+# 
+  610 158                           nhamdm , nstate
+# 
+    4                               nband
+  200   1.00d-10   1.00d-10         ntrmon,orthnq,orthgq
+   25   1.00d-00                    ndtel, dtel
+ demass=  001.00000  deekin=  000.00000  sqgcut=  0.000000
+#@ END of RUNPAR
+#@ START of KPOINTS
+#   3    1                idsyst,idtype 
+# ci     1                spgm,nse 
+#   0                     nreg: k-points in irrBZ
+#   1    3    4           nmop(1), nmop(2), nmop(3) as read in
+#   1    0                ikzero, nbound
+# values accepted unchanged
+#   1    3    4           nmop(i),i=1,3
+   12                    nkpt,number of generated k-points
+       2.00        6.00        8.00       12.00       denominators for k-point
+   0.0000000    1.2500000    2.0000000    1.00000000000000    1   vklmn, wghtkp
+   0.0000000   -0.7500000    2.0000000    1.00000000000000    2   vklmn, wghtkp
+   0.0000000    2.7500000   -2.0000000    1.00000000000000    3   vklmn, wghtkp
+   0.0000000    1.2500000    0.0000000    1.00000000000000    4   vklmn, wghtkp
+   0.0000000    0.7500000    0.0000000    1.00000000000000    5   vklmn, wghtkp
+   0.0000000    2.7500000    0.0000000    1.00000000000000    6   vklmn, wghtkp
+   0.0000000    1.2500000   -2.0000000    1.00000000000000    7   vklmn, wghtkp
+   0.0000000    0.7500000    2.0000000    1.00000000000000    8   vklmn, wghtkp
+   0.0000000    2.7500000    2.0000000    1.00000000000000    9   vklmn, wghtkp
+   0.0000000   -1.2500000    4.0000000    1.00000000000000   10   vklmn, wghtkp
+   0.0000000    0.7500000    4.0000000    1.00000000000000   11   vklmn, wghtkp
+   0.0000000    2.7500000    4.0000000    1.00000000000000   12   vklmn, wghtkp
+#@ END of KPOINTS

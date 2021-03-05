@@ -1,0 +1,34 @@
+# system configuration for compiling Fortran code
+
+#EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK
+#MPIUSAGE   = -D NOMPI
+#MPIUSAGE   = -D NOLAPACK
+#MPIUSAGE   = -D USE_SYMMETRY
+#MPIUSAGE   = -D NOScaLAPACK
+MPIUSAGE  = -D TIME -D KEI
+
+##############################################
+## Intel system ##############################
+##############################################
+
+CC         = 
+### serial Fortran compiler and linker
+FC         = frtpx
+### parallel Fortran compiler and linker
+MPIFC      = mpifrtpx
+
+### compile flags for production
+CFLAGS_OPT = -Ad -Kfast -Kocl -Kilfunc -Kpreex
+CFLAGS_OPT = -Ad -Kopenmp -Kfast -Koptmsg=2 -Kilfunc -Kfp_contract
+### compile flags for development
+CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback
+
+### preprocessor
+CPP    = cpp
+CPPOUT = -o
+
+### libraries
+LIBS = -SSL2 -SCALAPACK -Kopenmp
+ 

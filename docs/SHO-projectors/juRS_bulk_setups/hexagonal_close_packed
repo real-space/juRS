@@ -1,0 +1,11 @@
+$b = $a sqrt 3
+cell $a $b $c
+comment __El__ in hcp structure
+atoms_fractional
+   __El__      0   0   0
+   __El__      1:2 3:6 0
+   __El__      1:2 1:6 1:2
+   __El__      0   4:6 1:2
+atoms_fractional
+
+

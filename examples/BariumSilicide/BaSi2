@@ -1,0 +1,75 @@
+boundary_condition bulk
+
+element  Ba  5s 2 6s 2 5p 6 6p 5d* | 2.2
+element  Si  3s* 2 3p* 2 0 3d | 2.0
+
+input_comment BaSi2: http://prb.aps.org/pdf/PRB/v64/i4/e045206
+
+### Symmetry: Pnma
+### LocalSymmetry of each atom:
+##Si: ????
+##Si: c(4)
+##Si: c(4)
+##Si: d(8)
+##Ba: c(4)
+##Ba: c(4)
+
+cell_size 8.710 6.585 11.240
+cell_scale Ang
+
+atoms_fractional
+Ba   0.016     0.250     0.691
+Ba   0.841     0.250     0.094
+Ba   0.484    -0.250     1.191
+Ba  -0.016    -0.250    -0.691
+Ba  -0.484     0.250    -1.191
+Ba  -0.341    -0.250     0.594
+Ba  -0.841    -0.250    -0.094
+Ba   0.341     0.250    -0.594
+Si   0.420     0.250     0.092
+Si   0.197     0.250     0.965
+Si   0.195     0.070     0.148
+Si   0.080    -0.250     0.592
+Si  -0.420    -0.250    -0.092
+Si  -0.080     0.250    -0.592
+Si   0.303    -0.250     1.465
+Si  -0.197    -0.250    -0.965
+Si  -0.303     0.250    -1.465
+Si   0.305    -0.430     0.648
+Si   0.195     0.430     0.148
+Si   0.305    -0.070     0.648
+Si  -0.195    -0.070    -0.148
+Si  -0.305    -0.430    -0.648
+Si  -0.195    -0.430    -0.148
+Si  -0.305     0.070    -0.648
+atoms_fractional
+
+grid_multiplier 1
+
+scf max 6 min 6 < 1E-6
+wfs max 3 min 1 < 1E-4
+
+mixing 0.05
+
+pdos sl
+
+
+
+
+#### Experimental Reference: K. H. Janzon, H. Schafer, and A. Weiss, Z. Anorg. Allg. Chem. 372, 87 1979.
+#cell_scale 8.920 6.750 11.570
+#atoms_fractional
+#Si 0.000 0:4 0.000
+#Si 0.424 1:4 0.091
+#Si 0.205 1:4 0.969
+#Si 0.190 .078 .147
+#Ba 0.014 1:4 0.694
+#Ba 0.893 1:4 0.095
+#atoms_fractional
+
+
+### another Reference: Thorsten Goebel, Yurii Prots, Frank Haarmann "Refinement of the crystal structure of dibarium tetrasilicide, Ba2Si4"
+###             Z. Kristallogr. NCS 224 (2009) 7-8 / DOI 10.1524/ncrs.2009.0005
+
+
+

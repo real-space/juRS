@@ -1,0 +1,80 @@
+##########################################################################
+#
+# juRS input for
+#
+# STO {gga lattice constant, 1x1x1 super cell, SrO-termination}
+#
+##########################################################################
+
+### define the rectangular cell size (in Bohr if not specified otherwise)
+cell 7.448
+
+### define the type of exchange-correlation functional
+xc lda
+
+### set periodic boundary conditions
+boundary 1
+
+### define the atomic positions
+atoms_fractional
+Sr  1:2 1:2 1:2
+Ti   0   0   0
+O    0   0  1:2
+O    0  1:2  0
+O   1:2  0   0
+atoms_fractional
+
+
+### specifiy the PAW data sets
+
+#element  Sr  5s 1 5p 4d | 2.44 V=s ## failed
+#element  Sr  5s 1 5p 4d | 2.9 V=s
+#element  Sr  5s 1 5p 4d | 3.2 V=s
+
+element  Sr  4s 2 5s 4p 6 5p 4d | 2.44 2.44 2.37
+
+
+element  Ti  4s 1 4p 3d 1 0 | 2.4 V=s
+
+element  O   2s* 2 2p* 3 2 3d | 1.3 1.13 1.17
+#element  O   2s* 2 2p* 3 2 3d | 1.3
+
+element  Sr  4s 2 5s 2 4p 6 5p 4d | 2.44 2.44 2.37
+element  Ti  3s 2 4s 2 3p 6 4p 1E-9 3d 2 0 | 2.4 2.0
+element  O   2s 2 3s 2p 3 1 3p 3d | 1.3 1.13 1.17
+
+
+### define the minimum grid spacing
+spacing 0.311
+#spacing 0.3725
+
+### define the Brillouin-zone sampling
+#kmesh 6
+#kshift 0.062500  0.335938  0.437500
+
+kmesh 4
+0.023438  0.199219  0.300781
+
+### electronic temperature
+temp 999 Kel
+
+### control of the self-consistency
+scf max 99 min 1 < 1E-6
+
+### control of the wave function convergence
+wfs max 2 min 1 < 1E-5
+
+### density mixing
+mixing 0.1
+
+### analysis: prjojected density of states
+#pdos sl
+
+### number of bands
+#bands 21
+
+### control the calculation of forces
+forces 0
+
+nscale 2
+

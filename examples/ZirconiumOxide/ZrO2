@@ -1,0 +1,109 @@
+###
+### Zirconia in C1 structure (flourite structure)
+###
+
+## Yt stabilized ZrO2 5.14 Ang, structures often calculated with 5.105 Ang
+scale Ang
+cell 5.14
+
+## relatively dense
+#ngps 32
+
+ngps 24
+
+
+element  Zr  4s 2 5s 2 4p 6 5p 1E-16 4d* 2 0 | 2.5 2.52 2.35
+element  O   2s 2 3s 2p 3 1 3p 3d | 1.3 1.13 1.17
+
+
+nscale 2
+
+xc PBE
+
+boundary 1
+
+temp 1000 Kel
+
+scf max 7 min 7 < 1E-7
+mixing 0.05
+
+### shift to put the oxygens onto the corner sites
+#origin -1:4 -1:4 -1:4
+
+
+atoms_fractional
+O    1:4  1:4  1:4
+Zr  -1:2 -1:2 -1:2
+O   -1:4 -1:4 -1:4
+
+O   -1:4 -1:4  1:4
+Zr    0    0  -1:2
+O    1:4  1:4 -1:4
+
+O   -1:4  1:4 -1:4
+Zr    0  -1:2   0
+O    1:4 -1:4  1:4
+
+O    1:4 -1:4 -1:4
+Zr  -1:2   0    0
+O   -1:4  1:4  1:4
+atoms_fractional
+
+kmesh 4
+kshift 0.023438  0.199219  0.300781
+#symmetry inv
+
+### analyze
+pdos sl
+
+### backfolded into [-1:2 1:2]
+#O    1:4  1:4  1:4
+#Zr  -1:2 -1:2 -1:2
+#O   -1:4 -1:4 -1:4
+#
+#O   -1:4 -1:4  1:4
+#Zr    0    0  -1:2
+#O    1:4  1:4 -1:4
+#
+#O   -1:4  1:4 -1:4
+#Zr    0  -1:2   0
+#O    1:4 -1:4  1:4
+#
+#O    1:4 -1:4 -1:4
+#Zr  -1:2   0    0
+#O   -1:4  1:4  1:4
+
+### every Zr is surrounded by its Oxygens
+#O   -3:4 -3:4 -3:4
+#Zr  -1:2 -1:2 -1:2
+#O   -1:4 -1:4 -1:4
+#
+#O   -1:4 -1:4 -3:4
+#Zr    0    0  -1:2
+#O    1:4  1:4 -1:4
+#
+#O   -1:4 -3:4 -1:4
+#Zr    0  -1:2   0
+#O    1:4 -1:4  1:4
+#
+#O   -3:4 -1:4 -1:4
+#Zr  -1:2   0    0
+#O   -1:4  1:4  1:4
+
+
+
+
+#Zr  -1:2 -1:2 -1:2
+#Zr    0    0  -1:2
+#Zr    0  -1:2   0 
+#Zr  -1:2   0    0 
+#O   -1:4 -1:4 -1:4
+#O    1:4 -1:4 -1:4
+#O   -1:4  1:4 -1:4
+#O    1:4  1:4 -1:4
+#O   -1:4 -1:4  1:4
+#O    1:4 -1:4  1:4
+#O   -1:4  1:4  1:4
+#O    1:4  1:4  1:4
+
+

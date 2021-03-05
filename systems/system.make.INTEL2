@@ -1,0 +1,66 @@
+# system configuration for compiling Fortran code
+
+#EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK, etc.
+CPPFLAGS =
+# CPPFLAGS += -D NOMPI
+# CPPFLAGS += -D NOLAPACK
+# CPPFLAGS += -D USE_SYMMETRY
+# CPPFLAGS += -D BLUEGENE
+CPPFLAGS += -D NOScaLAPACK
+CPPFLAGS += -D TIME
+
+##############################################
+## Intel system ##############################
+##############################################
+
+CC         = mpicc
+CC         = 
+### serial Fortran compiler and linker
+FC         = ifort
+### parallel Fortran compiler and linker
+MPIFC      = mpif90
+#CPPFLAGS += -D NOMPI
+#MPIFC      = ifort
+
+ifeq ($(OPENMP),TRUE)
+  MPIFC += -openmp -openmp-report2
+endif
+
+PROFILE =
+PROFILE = -g
+#PROFILE = -pg
+
+### compile flags for production
+CFLAGS_OPT = -r8 -O3 $(PROFILE)
+### compile flags for development
+CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback 
+#-warn all
+
+
+
+
+##############################################
+## Intel system ##### gfortran ###############
+##############################################
+#CC         = 
+#FC         = gfortran
+### parallel Fortran compiler and linker
+#MPIFC      = mpif90
+### compile flags for production
+#CFLAGS_OPT = -fdefault-real-8 -fimplicit-none -ffree-form -ffree-line-length-none -O3 $(PROFILE)
+### compile flags for development
+#CFLAGS_DEV = -fdefault-real-8 -fimplicit-none -ffree-form -ffree-line-length-none -O0 -g -pg -fcheck=bounds
+ifeq ($(OPENMP),TRUE)
+#  MPIFC += -openmp -openmp-report2
+endif
+
+
+
+### preprocessor
+CPP    = cpp
+CPPOUT = -o
+
+### libraries
+LIBS = -L/usr/lib64 -llapack -lblas $(PROFILE)

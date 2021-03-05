@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# echo "#"
+
+head=InputFileHead
+exe=~/rs/paw
+
+for d in set01 set02 set03 alt03 set04 set05 rlx05 rlx08 set08 set10 set12
+do
+
+# echo $d
+cat $head $d/positions > $d/GST
+cd $d
+$exe -cm GST
+cd ..
+
+done
+

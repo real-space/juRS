@@ -1,0 +1,35 @@
+# system configuration for compiling Fortran code
+
+EXTENDED=TRUE
+
+### switch off MPI, LAPACK, ScaLAPACK
+
+CPPFLAGS= 
+CPPFLAGS += -D NOMPI
+#CPPFLAGS += -D NOLAPACK
+CPPFLAGS += -D NOScaLAPACK
+
+##############################################
+## Intel system ##############################
+##############################################
+
+### serial C compiler
+CC         = icc  
+CC         =   
+### serial Fortran compiler and linker
+FC         = gfortran
+### parallel Fortran compiler and linker
+MPIFC      = gfortran
+
+### compile flags for production
+CFLAGS_OPT = -fopenmp -r8 -O3 -g -pg
+### compile flags for development
+CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback -fpe0
+
+### preprocessor
+CPP    = gfortran -E
+CPPOUT = -o
+
+### libraries
+LIBS  = -L/usr/local/lib/ -llapack_ifort -lblas_ifort 
+LIBS  = -openmp -L/usr/local/lib/ -llapack_ifort -lblas_ifort 

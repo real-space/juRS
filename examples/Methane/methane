@@ -1,0 +1,65 @@
+# --------------------------------------
+# juRS v6.03    
+input_comment test calculation for methan molecule
+# --------------------------------------
+# all coordinates are given xyz-order
+# keywords may be in arbitrary order
+# --------------------------------------
+
+element  C  2s* 2 2p* 2 0 3d | 1.2
+
+nscale 1
+##spacing 0.3
+grid 64
+
+# extend of the rectangular cell (non-optional)
+cell_size 10.
+
+# scale the cell by a factor
+cell_scale Ang
+
+# specify the convergence parameter set
+parameter_set light
+
+# boundary condition for each direction
+boundary_condition iso iso iso
+
+xc PBE
+
+md max 99 < 1E-3
+
+# MPI tasks in domain decomposition
+domain_decomposition 2 2 2
+
+# mixing strategy
+density_mixing 0.3 straight
+
+# use an automatically generated k-point mesh
+kpoint_mesh 1 1 1
+
+# list of atoms in absolute coordinates
+#atoms methan_zero.xyz
+$dist = 1.087 Ang
+$a = $dist sqrt 1:3
+$b = -1 $a
+
+atoms 
+C 0 0 0
+H $a $a $a
+H $b $b $a
+H $b $a $b
+H $a $b $b
+atoms
+
+# scale the abolute atomic coordinates by a factor
+#atom_scale Ang
+
+# run with --CheckMode first
+
+scf max 3 < 1E-9
+poisson max 99 < 1E-9
+md max 2 < 1E-3
+grid 32
+domains 1 2 2
+
+

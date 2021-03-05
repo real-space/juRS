@@ -1,0 +1,20 @@
+cell 6.743 Bohr
+boundary 1
+xc VWN80
+element  C   2s* 2 2p* 2 3d | 1.4
+atoms_fractional
+C  -3:8 -3:8 -3:8
+C   1:8  1:8 -3:8
+C  -1:8 -1:8 -1:8
+C   3:8  3:8 -1:8
+C  -3:8  1:8  1:8
+C   1:8 -3:8  1:8
+C  -1:8  3:8  3:8
+C   3:8 -1:8  3:8
+atoms_fractional
+kmesh 6
+ngps 20
+scf max 9 min 3 < 1E-7
+wfs max 1 < 1E-9
+mixing 0.4
+temp 999 Kel

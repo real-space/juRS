@@ -1,0 +1,20 @@
+###
+### Graphene on Iridium(111)
+###
+
+
+boundary 1
+
+scale Ang
+cell  24.673077  21.367512  15.668709
+
+ascale Ang
+
+origin 0 0 1:2
+
+### one graphene layer 10x10 (200 atoms)
+atoms coords.6
+
+### 4 layers of 9x9 fcc(111) Iridium (324 atoms)
+atoms coords.77
+

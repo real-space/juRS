@@ -1,0 +1,57 @@
+##########################################################################
+#
+# juRS input for
+#
+# SrO {gga lattice constant, 1x1x1 super cell}
+#
+##########################################################################
+
+### define the rectangular cell size (in Bohr if not specified otherwise)
+scale sqrt 2
+cell 7.448
+
+### define the type of exchange-correlation functional
+xc PBE
+
+### set periodic boundary conditions
+boundary 1
+
+### define the atomic positions
+atoms_fractional
+Sr  .0  .0  .0
+O   .5  .0  .0
+Sr  .5  .5  .0
+O   .0  .5  .0
+Sr  .5  .0  .5
+O   .0  .0  .5
+Sr  .0  .5  .5
+O   .5  .5  .5
+atoms_fractional
+
+### specifiy the PAW data sets
+element  Sr  5s* 2 5p | 3.0 V=M
+element  O   2s* 2 2p 3 1 | 1.31
+
+### define the minimum grid spacing
+#spacing 0.311
+spacing 0.33
+
+### define the Brillouin-zone sampling
+#kmesh 20
+#kmesh 8
+kmesh 4
+
+### electronic temperature
+temp 999 Kel
+
+### control of the self-consistency
+scf max 3 min 1 < 1E-6
+
+### control of the wave function convergence
+wfs max 2 min 1 < 1E-5
+
+### density mixing
+mixing  0.2
+
+### analysis: prjojected density of states
+pdos sl

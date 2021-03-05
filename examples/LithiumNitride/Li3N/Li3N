@@ -1,0 +1,41 @@
+
+
+## a=3.65 Ang
+## c=3.88 Ang
+cell_scale 3.65 Ang
+cell 1 sqrt3 1.063
+
+boundary_condition periodic
+
+kmesh 6
+
+mixing 0.1 
+
+forces off
+
+grid_spacing 0.2 Ang
+
+
+scf max 9
+#wfs max 2 < 1E-6
+
+atoms_fractional
+N   0:2 0:6 0:2
+N   1:2 3:6 0:2
+Li  0:2 0:6 1:2
+Li  1:2 3:6 1:2
+Li  1:2 1:6 0:2
+Li  0:2 2:6 0:2
+Li  0:2 4:6 0:2
+Li  1:2 5:6 0:2 
+atoms_fractional
+
+
+element  Li  2s* .7 0 2p | 2.2                                                   
+
+element  N   2s* 2 2p* 3 .9 | 1.4   
+
+nscale 1
+
+pdos sl
+

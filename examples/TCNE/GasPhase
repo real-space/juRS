@@ -1,0 +1,35 @@
+##
+## TCNE in gas phase
+
+cell 24 16 12
+ngps 48 32 24
+
+
+bands 40
+
+mixing 0.2
+scfiter max 13 min 6 < 1E-6
+
+temp 600 Kel
+
+solver diis 
+
+forces 1
+
+#atomic positions given in Angstrom
+ascale Ang
+
+atoms
+C   -0.67  0.00 0.
+C    0.67  0.00 0.
+C   -1.76 -1.09 0.
+C    1.76 -1.09 0.
+C   -1.76  1.09 0.
+C    1.76  1.09 0.
+N   -2.80 -2.13 0.
+N    2.80 -2.13 0.
+N   -2.80  2.13 0.
+N    2.80  2.13 0.
+atoms
+
+units eV Ang

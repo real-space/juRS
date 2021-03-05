@@ -1,0 +1,14 @@
+
+
+
+scale Ang
+cell  128.6235416  116.6463688  134.97645
+
+ascale Ang
+atoms coords28800.xyz
+
+boundary 1
+
+xc PBE
+element  C  2s* 1 .5 2p* 2 .5 3d | 1.3
+

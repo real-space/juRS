@@ -1,0 +1,51 @@
+## GeSbTe alloy
+
+## cell size, one unit cell
+cell 1 1 1
+## scale the cell 
+scale  6.04 Ang
+## scale the atomic positions
+ascale 6.04 Ang
+
+## number of grid points
+ngps 32 32 32
+
+## MPI processes domain decomposition
+domains 2 2 2
+
+## boundary conditions 1:periodic
+boundary 1 1 1
+
+## number of SCF iterations
+scf max 3 min 3 < 1E-6
+
+## number of solver steps
+wfs max 3 min 1 < 1E-6
+
+## density mixing with 5%
+mixing 0.05
+
+## maximum solver steps for the Poisson equation
+poisson max 333
+
+atoms
+#0         0.0          0.0         0.0
+Te         0.5          0.0         0.0
+Sb         0.5          0.5         0.0
+Te         0.0          0.5         0.0
+Ge         0.0          0.5         0.5
+Te         0.5          0.5         0.5
+Sb         0.5          0.0         0.5
+Te         0.0          0.0         0.5
+atoms
+
+temp 300 Kel
+nscale 1
+functional PZ81
+dg 2 5
+md max 0
+
+element  Ge  4s* 2 4p* 2 4d | 1.8
+element  Sb  5s* 2 5p* 3 5d | 2.5
+element  Te  5s* 2 5p* 4 5d | 2.2
+

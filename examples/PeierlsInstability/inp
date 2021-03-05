@@ -1,0 +1,20 @@
+
+scale Ang
+cell 6 6 2
+
+boundary 0 0 1
+
+atoms_fractional
+H 0 0 -1:4
+H 0 0  1:4
+atoms_fractional
+
+
+kmesh 1 1 19
+
+kpath
+ 0 0  0
+ 0 0 1:2
+kpath
+
+

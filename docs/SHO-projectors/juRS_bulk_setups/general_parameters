@@ -1,0 +1,7 @@
+boundary_condition bulk
+cell_scale Ang
+paw_directory ..
+solver cg
+poisson fft
+mixing 0.05
+temparature 1000 Kel

@@ -1,0 +1,32 @@
+
+cell 4.2 Ang
+
+boundary 1
+
+xc PBE
+
+spacing 0.27 Ang
+
+element  Mg  2s 2 3s 2 2p 6 3p 3d | 2.05 2.05 1.96
+element  O   2s* 2 2p 3 1 | 1.31
+
+atoms_fractional
+Mg  .0  .0  .0
+O   .5  .0  .0
+Mg  .5  .5  .0
+O   .0  .5  .0
+Mg  .5  .0  .5
+O   .0  .0  .5
+Mg  .0  .5  .5
+O   .5  .5  .5
+atoms_fractional
+
+scf max 13 min 3 < 1E-7
+
+mixing 0.05
+
+
+
+
+
+
