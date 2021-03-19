@@ -56,7 +56,7 @@ LD = $(FC)
 # CPPFLAGS += -D NaN_SEARCH
 
 ### general debugging
-CPPFLAGS += -D DEBUG_ALL
+# CPPFLAGS += -D DEBUG_ALL
 
 ### debugging of gradient functionals
 # CPPFLAGS += -D DEBUG_GGA
