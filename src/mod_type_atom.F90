@@ -290,7 +290,7 @@ cDBG  if(o>0) write(o,'(/3A,I0)') sym, fun, 'atom #', ia
 
 cDBG  if(o>0) write(o,'(3A,I0,3A,3F10.3)') sym, fun, 'position for atom #', ia, '  ', a(ia)%s%sym, ', pos=', a(ia)%pos
 cDBG  if(o>0) write(o,'(3A,3F10.3)') sym, fun, 'position - grid offset=', a(ia)%pos-gc%off
-cDBG  if(o>0) write(o,'(5A,I0)') sym, fun, 'Weinert exponent for ', a(ia)%s%sym, ' is ', a(ia)%s%nWexp
+! cDBG  if(o>0) write(o,'(5A,I0)') sym, fun, 'Weinert exponent for ', a(ia)%s%sym, ' is ', a(ia)%s%nWexp
 
       ! prepare the set of imagepositions minus the grid offset of the dense grid gd
       do ii = 1, ni

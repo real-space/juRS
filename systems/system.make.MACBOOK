@@ -17,9 +17,9 @@ CPPFLAGS += -D NOScaLAPACK
 CC         = icc  
 CC         =   
 ### serial Fortran compiler and linker
-FC         = ifort
+FC         = gfortran
 ### parallel Fortran compiler and linker
-MPIFC      = ifort
+MPIFC      = gfortran
 
 ### compile flags for production
 CFLAGS_OPT = -openmp -r8 -O3 -g -pg

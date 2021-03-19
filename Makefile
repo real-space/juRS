@@ -45,8 +45,8 @@ ifdef MPIFC
     FC = $(MPIFC)
 endif
 ifdef CFLAGS_OPT
-	FCFLAGS = $(CFLAGS_OPT)
-#  	FCFLAGS = $(CFLAGS_DEV)
+# 	FCFLAGS = $(CFLAGS_OPT)
+ 	FCFLAGS = $(CFLAGS_DEV)
 endif
 
 ### the Linker is usually the same as the Compiler
@@ -54,11 +54,18 @@ LD = $(FC)
 
 ### add some preprocessor flags if necessary
 # CPPFLAGS += -D NaN_SEARCH
-# CPPFLAGS += -D DEBUG_ALL
-# CPPFLAGS += -D DEBUG_GGA
-CPPFLAGS += -D USE_SYMMETRY
-CPPFLAGS += -D CONSTR=4
 
+### general debugging
+CPPFLAGS += -D DEBUG_ALL
+
+### debugging of gradient functionals
+# CPPFLAGS += -D DEBUG_GGA
+
+### symmetrization of the density
+CPPFLAGS += -D USE_SYMMETRY
+
+### real-space constraints
+# CPPFLAGS += -D CONSTR=4
 
 ##################################################################
 ### define all objects
@@ -150,7 +157,8 @@ ifeq ($(EXTENDED),TRUE)
 endif
 
 ifeq ($(CC),)
-	## no c-compiler
+	## The C-compiler is needed to interface to the pawdata reader!
+	## We can, however, compile only the Fortran parts of the code
 else
 	COBJECTS += pawxmlreader.o
 	MODULES += mod_pawxmlreader.o
@@ -198,7 +206,7 @@ SRC += $(foreach file, $(OBJECTS), $(foreach suffix, .c, $(wildcard $(SRCDIR)/c/
 # the pattern how to create .o-object out of a .F90-source file
 
 %.o: %.c
-	$(CC) -I$(INCDIR) $(CFLAGS) -c $<
+	$(CC) -I$(INCDIR) $(CFLAGS) $(CPPFLAGS) -c $<
 
 
 ### simply compile regular .f90-source files
@@ -254,7 +262,7 @@ backup:
 .PHONY: deps backup clean clean_all edit
 
 deps: $(SRC)
-	./create_deps.sh $^ > mod.deps
+	./tools/create_deps.sh $^ > mod.deps
 
 mod.deps: ;
 

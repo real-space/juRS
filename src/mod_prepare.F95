@@ -632,7 +632,7 @@ cNaN      if( any( spsi(:,ibsk) /= spsi(:,ibsk) ) ) stop 'PRE prepare_wavefuncti
     ! range of states, have been separated, because the normalization
     ! requires synchronization, whereas the setup is independent.
 
-cNaN  call NaN_search( spsi, fun, 'spsi after setting up atomic orbitals' )
+cNaN  ist = NaN_search( spsi, fun, 'spsi after setting up atomic orbitals' )
 
     ! WARNING, wave functions are neither normalized nor orthogonal
   endsubroutine ! prepare_wavefunctions
@@ -762,6 +762,7 @@ cNaN  use toolbox, only: operator(+)
     integer, allocatable              :: orb(:,:)
     real, allocatable                 :: orb_energy(:)
     real                              :: kv(3), k2
+cNaN  integer                         :: ist
 
     nbnd = global%nbnd
     nspn = global%nspn
@@ -828,7 +829,7 @@ cDBG  if(o>0) write(o,'(2A,I0,9A)') sym, fun, nbands, ' plane waves'
 
         ! create a PW
         call generate_plane_wave( g, m=orb(1:3,ib), kv=kv(1:3), spsi=spsi(:,ibs) )
-cNaN    call NaN_search( spsi(:,ibs) , fun, text='spsi(:,ibs),ibs='+ibs )
+cNaN    ist = NaN_search( spsi(:,ibs) , fun, text='spsi(:,ibs),ibs='+ibs )
       enddo ! ib
 
 cDBG  if( nkpt > 1 .and. o>0) write(o,'(9A)') sym, fun, 'create other k-point sets from Gamma-point copy'

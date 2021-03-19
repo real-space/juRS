@@ -495,9 +495,9 @@ cDBG  if(o>0) write(o,'(3A,I1,9A)') sym, fun, 'read rho(:,:,:,', i4, ')'
   integer :: size_grid(3)
   integer :: i
 
-  #define CHECK_OPEN if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to open "', trim(filename), '".'; return; endif
-  #define CHECK_READ if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to read from "', trim(filename), '".'; return; endif
-  #define CHECK_ALLO if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to alloate'; return; endif
+#define CHECK_OPEN if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to open "', trim(filename), '".'; return; endif
+#define CHECK_READ if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to read from "', trim(filename), '".'; return; endif
+#define CHECK_ALLO if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to alloate'; return; endif
 
     ios = -1 ! ERROR
 
@@ -532,7 +532,7 @@ cDBG  if(o>0) write(o,'(3A,I1,9A)') sym, fun, 'read rho(:,:,:,', i4, ')'
       CHECK_READ
     enddo
 
-    read(unit=U, fmt=*, iostat=ios), wf(:,:,:)
+    read(unit=U, fmt=*, iostat=ios) wf(:,:,:)
     CHECK_READ
 
     close(unit=U)
@@ -565,9 +565,9 @@ cDBG  if(o>0) write(o,'(3A,I1,9A)') sym, fun, 'read rho(:,:,:,', i4, ')'
   integer                           :: nloc(6), nall(6)
   integer :: band_i, i, j
 
-  #undef  CHECK_OPEN
-  #define CHECK_OPEN if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to open "', trim(filename_b), '".'; return; endif
-  #define CHECK_WRITE if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to write to "', trim(filename_b), '".'; return; endif
+#undef  CHECK_OPEN
+#define CHECK_OPEN if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to open "', trim(filename_b), '".'; return; endif
+#define CHECK_WRITE if( ios /= 0 ) then ; if(o>0) write(o,'(9A)') sym, fun, 'unable to write to "', trim(filename_b), '".'; return; endif
 
     ios = -1 ! ERROR
 

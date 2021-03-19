@@ -14,22 +14,22 @@ CPPFLAGS += -D NOScaLAPACK
 ##############################################
 
 ### serial C compiler
-CC         = icc  
-CC         =   
+CC         = gcc-10
 ### serial Fortran compiler and linker
 FC         = gfortran
 ### parallel Fortran compiler and linker
 MPIFC      = gfortran
 
 ### compile flags for production
-CFLAGS_OPT = -fopenmp -r8 -O3 -g -pg
+CFLAGS_OPT = -fopenmp -fdefault-real-8 -O3 -g -pg -ffree-line-length-none -cpp -fno-range-check -fallow-invalid-boz
 ### compile flags for development
-CFLAGS_DEV = -r8 -O0 -g -pg -CB -traceback -fpe0
+CFLAGS_DEV = -fdefault-real-8 -O0 -g -pg -fbounds-check -fbacktrace -ffpe-trap=zero -ffree-line-length-none -cpp -fno-range-check -fallow-invalid-boz
+
+CFLAGS     =
 
 ### preprocessor
 CPP    = gfortran -E
 CPPOUT = -o
 
 ### libraries
-LIBS  = -L/usr/local/lib/ -llapack_ifort -lblas_ifort 
-LIBS  = -openmp -L/usr/local/lib/ -llapack_ifort -lblas_ifort 
+LIBS  = -llapack -lblas -fopenmp

@@ -3431,7 +3431,7 @@ cDBG  if(o>0) ist = display_conf( o, e%Z, q, occ(0,:,:), legend=.true. )
       else ! GPAW grid
         ist = calc_atom( g, iZ, e%Z, e%sym, occ, nn, rcut, xc, spin_polarized, &
                       config=e%config, check_logder=checks, sigma=sigma &
-                       , g_xml_arg=rgrid_eqn('r=a*i/(n-i)', n=n_output_rgrid, a=0.4d0*9.D2/n_output_rgrid, d=0d0, b=0d0) &
+                       , g_xml_arg=rgrid_eqn('r=a*i/(n-i)', n=n_output_rgrid, a=0.4*9.e2/n_output_rgrid, d=0., b=0.) &
                      )
       endif ! softwitch output_rgrid
     else

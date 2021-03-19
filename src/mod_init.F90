@@ -22,7 +22,8 @@
 !! reads the input file and checks consistency of various params
 module init
   use type_item, only: item
-  use constants, only: SOLVER_NONE, SOLVER_SUBSROT, SOLVER_CONGRAD, SOLVER_DAVIDSO, SOLVER_DESCENT, SOLVER_RMMDIIS, SOLVER_XPLICIT
+  use constants, only: SOLVER_NONE, SOLVER_SUBSROT, SOLVER_CONGRAD, &
+       SOLVER_DAVIDSO, SOLVER_DESCENT, SOLVER_RMMDIIS, SOLVER_XPLICIT
   use constants, only: SOLVER_SCHEME_SPEED, SOLVER_SCHEME_STABLE ! default is speed
   use type_grid, only: BC_MIRROR, BC_FINITE, BC_PERIODIC, BC_DEFAULT
   use mixing, only: MixrDict => Dictionary

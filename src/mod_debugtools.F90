@@ -270,10 +270,8 @@ implicit none
     character(len=*), intent(in)    :: symfun
     character(len=*), intent(in), optional :: text
 #ifdef NaN_SEARCH
-    inan = count( a /= a )
-    if( inan > 0 ) then
-      isze = size( a )
-      call show( inan, size(a), symfun, text )
+    if( a /= a ) then
+      call show( inan, 1, symfun, text )
       stop 'NaN found (rank0 object)'
     endif ! a /= a
 #else
@@ -288,7 +286,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank1 object)'
     endif ! a /= a
@@ -304,7 +301,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank2 object)'
     endif ! a /= a
@@ -320,7 +316,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank3 object)'
     endif ! a /= a
@@ -336,7 +331,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank4 object)'
     endif ! a /= a
@@ -350,10 +344,8 @@ implicit none
     character(len=*), intent(in)    :: symfun
     character(len=*), intent(in), optional :: text
 #ifdef NaN_SEARCH
-    inan = count( a /= a )
-    if( inan > 0 ) then
-      isze = size( a )
-      call show( inan, size(a), symfun, text )
+    if( a /= a ) then
+      call show( inan, 1, symfun, text )
       stop 'NaN found (rank0 object)'
     endif ! a /= a
 #else
@@ -368,7 +360,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank1 object)'
     endif ! a /= a
@@ -384,7 +375,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank2 object)'
     endif ! a /= a
@@ -400,7 +390,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank3 object)'
     endif ! a /= a
@@ -416,7 +405,6 @@ implicit none
 #ifdef NaN_SEARCH
     inan = count( a /= a )
     if( inan > 0 ) then
-      isze = size( a )
       call show( inan, size(a), symfun, text )
       stop 'NaN found (rank4 object)'
     endif ! a /= a

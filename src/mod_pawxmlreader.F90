@@ -1,10 +1,11 @@
 !! @author Andrea Nobile
 #include "pawxmlreader.h"
-    
+
 
 module mod_pawxmlreader
   use iso_c_binding
   implicit none
+  public ! default visibility for this namespace
 
   ! must match exactly first part of struct atom in .c file
   type, bind(C) :: paw_atom
@@ -35,7 +36,7 @@ module mod_pawxmlreader
   character(len=32) :: xc_name
 
   interface 
-!   C function to parse xml file with expat       
+!   C function to parse xml file with the expat C-library for XML reading       
     subroutine pawxml_reader_read(filename) bind(C)      
       import
       character(kind=c_char), intent(in) :: filename(*)
@@ -48,7 +49,7 @@ module mod_pawxmlreader
       type(paw_atom), intent(out) :: pawatom
     endsubroutine
   endinterface
-  
+
   interface
     subroutine pawxml_reader_cleanup() bind(C)
       import 
@@ -165,8 +166,6 @@ module mod_pawxmlreader
     endsubroutine 
   endinterface
 
-  public :: print_from_fortran
-
   contains 
 
   subroutine pawxml_read(filename)
@@ -180,11 +179,10 @@ module mod_pawxmlreader
     integer(kind=c_int), intent(in) :: n
     integer :: i
     if(o>0) write(o,'(128A)',advance='no') (to_print_c(i), i=1,n)
-  end subroutine
+  endsubroutine
+
+  integer function test()
+    write(*,*,iostat=test) __FILE__,' no module test implemented!'
+  endfunction ! test
   
 endmodule ! mod_pawxmlreader
-
-      
-      
-
-

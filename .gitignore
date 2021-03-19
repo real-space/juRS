@@ -19,3 +19,4 @@ tool/src/*~
 TEST*/
 single_atom.*
 .DS_Store
+mod.deps

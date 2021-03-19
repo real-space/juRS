@@ -1080,6 +1080,9 @@ implicit none
     character(len=*), parameter     :: fun = ' povray: '
     iounit_t, parameter             :: u = 17
 
+#ifdef __GFORTRAN__
+    integer :: JMOL_COLORS(1:109) ! BOZ literals do not work in array constructor
+#else
     integer, parameter :: JMOL_COLORS(1:109) = (/ &
     z'FFFFFF', z'D9FFFF', z'CC80FF', z'C2FF00', z'FFB5B5', &
     z'909090', z'3050F8', z'FF0D0D', z'90E050', z'B3E3F5', &
@@ -1104,6 +1107,7 @@ implicit none
     z'B30DA6', z'BD0D87', z'C70066', z'CC0059', z'D1004F', &
     z'D90045', z'E00038', z'E6002E', z'EB0026' /)
     ! from http://jmol.sourceforge.net/jscolors/
+#endif
 
     ! local vars
     real :: hc, cl(3), la(3), center_of_pos(0:3), p(3), c(3), r, rs

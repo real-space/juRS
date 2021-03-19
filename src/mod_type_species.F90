@@ -158,7 +158,7 @@ implicit none
   endtype ! species
 
   
-
+cDBG  iounit_t, parameter :: u = 6
 
   contains
 
@@ -612,12 +612,12 @@ cDBG        if(u>0) write(u,'(6A,F10.6,9A)') sym, fun, 'modify partial wave ', l
 
   endfunction ! prepare_species
 
-  integer(kind=8) recursive function fact( n )
+  integer(kind=8) recursive function fact( n ) result( f )
     integer, intent(in) :: n
     if (n < 2) then 
-      fact = 1
+      f = 1
     else
-      fact = n * fact( n-1 )
+      f = n * fact( n-1 )
     endif
   endfunction ! fact
 

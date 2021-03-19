@@ -8,15 +8,15 @@ module constants
 implicit none
   public ! default for this module namespace
 
-  integer, parameter :: SOLVER_SUBSROT          =  b'00000001'
-  integer, parameter :: SOLVER_DESCENT          =  b'00000010'
-  integer, parameter :: SOLVER_CONGRAD          =  b'00000100'
-  integer, parameter :: SOLVER_RMMDIIS          =  b'00001000'
-  integer, parameter :: SOLVER_XPLICIT          =  b'00010000'
-  integer, parameter :: SOLVER_NONE             =  b'00000000'
-  integer, parameter :: SOLVER_SCHEME_STABLE    =  b'00001101' ! sr & cg & di
-  integer, parameter :: SOLVER_SCHEME_SPEED     =  b'00001001' ! sr & di
-  integer, parameter :: SOLVER_DAVIDSO          =  b'00100000' ! 
+  integer, parameter :: SOLVER_NONE             =  0
+  integer, parameter :: SOLVER_SUBSROT          =  1
+  integer, parameter :: SOLVER_DESCENT          =  2
+  integer, parameter :: SOLVER_CONGRAD          =  4
+  integer, parameter :: SOLVER_RMMDIIS          =  8
+  integer, parameter :: SOLVER_XPLICIT          = 16
+  integer, parameter :: SOLVER_SCHEME_STABLE    = 13 ! sr & cg & diis
+  integer, parameter :: SOLVER_SCHEME_SPEED     =  9 ! sr & diis
+  integer, parameter :: SOLVER_DAVIDSO          = 32 !
 
   ! physical constants
   real, parameter    :: SPEED_OF_LIGHT = 137.035989561 ! 137.0359895(61) in Hartree atomic units

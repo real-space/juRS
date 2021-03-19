@@ -453,7 +453,7 @@ cDBG      if(o>0) write(o,'(9A)') sym, fun, 'Deallocate BLACS arrays: MH and MS'
       call MPIbarrier( band_comm )
 
       !-- Calculate residual vector: Ppsi
-cDBG      call MPI_Barrier( g%comm, ist )
+cDBG      call MPIBarrier( g%comm )
 cDBG      if(o>0) write(o,'(9A)') sym, fun, 'Calculate residual vetors'
       do i1 = 1, nu
         !residual
@@ -464,7 +464,7 @@ cDBG      if(o>0) write(o,'(9A)') sym, fun, 'Calculate residual vetors'
 
  
       !-- Test the convergence through the norm of the residual vectors
-cDBG      call MPI_Barrier( g%comm, ist )
+cDBG      call MPIBarrier( g%comm )
 cDBG      if(o>0) write(o,'(9A)') sym, fun, 'Test the convergence through the norm of the residual vectors'
       nstates = 0
       residual(:) = 0.0 
@@ -487,7 +487,7 @@ cDBG      if(o>0) write(o,'(9A)') sym, fun, 'Test the convergence through the no
  
       ! if all the residual are converged or
       ! if the max number of iteration is reached then exit 
-cDBG      call MPI_Barrier( g%comm, ist )
+cDBG      call MPIBarrier( g%comm )
       if(o>0) write(o,'(2A,2(A,I4),A,ES9.2)') sym, fun, "Iter: ", iter, " subspace dim.: ", Nb, " residual(1): ", residual(1)
       if (nstates == 0) then
         run = .false.

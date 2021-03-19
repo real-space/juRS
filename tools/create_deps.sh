@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### build the dependency tree for objects by grepping the Fortran-module "use" statements
+
 for x in $@
 do
   [[ -f $x ]] || continue # ignore if not existing

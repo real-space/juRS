@@ -123,7 +123,7 @@ implicit none
     real :: ked(6,6)=0, rad(600,24)=0, energies(5)=0
 
     g = rgrid_create_exp( nint( 250.*sqrt(4+9.) )) ! set the radial grid with default values
-    test = write_paw_xml(26, [18., 8.], "custom", ["LDA", "PW"], energies, val, .632455532, rad, ked, g)
+    test = write_paw_xml(26, [18., 8.], "custom", ["LDA", "PW "], energies, val, .632455532, rad, ked, g)
   endfunction ! test
 #endif
 

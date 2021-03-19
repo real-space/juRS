@@ -36,6 +36,9 @@ module spherical
 #ifdef DEBUG
   use configuration, only: o ! output unit
 #endif
+#ifdef NaN_SEARCH
+  use debugtools, only: NaN_search
+#endif
 implicit none
   private ! default for this module namespace
   character(len=*), parameter, private :: sym = 'SPH' !! module symbol
@@ -100,9 +103,7 @@ implicit none
   !
   ! where Y_lm are real linear combination of the spherical harmonics
   !                                                    PBaum Aug 08
-#ifdef NaN_SEARCH
-  use debugtools, only: NaN_search
-#endif
+
     integer, intent(in)             :: nsph ! order of spherical points distribution
     integer, intent(in)             :: ellmax_prj ! ell-cutoff for partial waves
     integer, intent(in)             :: ellmax_rho ! ell-cutoff for densities in the sphere
@@ -116,13 +117,13 @@ implicit none
     ist = init_numerical_gaunt( nsph, ellmax_prj, ellmax_rho )
 
 #ifdef NaN_SEARCH
-    call NaN_search( gaunt_tensor, fun, text='Gaunt tensor' )
+    ist = NaN_search( Gaunt_tensor, fun, text='Gaunt tensor' )
 #endif
 
 #ifdef FULL_DEBUG
     ! show the Gaunt_tensor
     open(12,'dmp/gaunt_tensor',iostat=ist)
-    write(12,'(A)') '', 'gaunt_tensor:', ''
+    write(12,'(A)') '', 'Gaunt_tensor:', ''
 
     mlm = (ellmax_prj+1)**2
     allocate( Gell(mlm,mlm), stat=ist ) ; if(ist/=0) return
@@ -134,10 +135,10 @@ implicit none
         ilm = ilm+1
         write(12,'(A,I3)') ' ilm=', ilm
         do ilm1 = 1, mlm
-          write(12,'(16F10.6)') gaunt_tensor(1:mlm,ilm1,ilm)
+          write(12,'(16F10.6)') Gaunt_tensor(1:mlm,ilm1,ilm)
         enddo ! ilm1
         write(12,'(A)') ''
-        Gell = Gell + matmul( gaunt_tensor(1:mlm,1:mlm,ilm), gaunt_tensor(1:mlm,1:mlm,ilm) )
+        Gell = Gell + matmul( Gaunt_tensor(1:mlm,1:mlm,ilm), Gaunt_tensor(1:mlm,1:mlm,ilm) )
       enddo ! emm
       write(12,'(A,I3)') ' 4.*Pi*sum( G(:,:,ell_emm)**2 , emm=-ell,ell ), ell=', ell
       do ilm1 = 1, s%mlm
@@ -504,9 +505,6 @@ implicit none
   status_t function init_Xlm( nsph, ellmax ) result( ist )
   use harmonics, only: ELLMAX_IMPLEMENTED
   use configuration, only: WARNING
-#ifdef NaN_SEARCH
-  use debugtools, only: NaN_search
-#endif
   use gga_tools, only: polar_angles
 #ifdef USE_LEBEDEV_GRID
   use LebedevLaikov, only: create_Lebedev_grid
@@ -552,8 +550,8 @@ implicit none
     ist = gen_Xlm( p=spts, ellmax=lmax )
 
 #ifdef NaN_SEARCH
-    call NaN_search( XlmP, fun, text='XlmP, basis of real spherical harmonics' )
-    call NaN_search( PXlm, fun, text='PXlm, basis of real spherical harmonics' )
+    ist = NaN_search( XlmP, fun, text='XlmP, basis of real spherical harmonics' )
+    ist = NaN_search( PXlm, fun, text='PXlm, basis of real spherical harmonics' )
 #endif
     ! prepare data for GGA
     deallocate( dXlmP, d2XlmP, theta, stat=ist )
@@ -1181,7 +1179,8 @@ cDBG    Xlm(il0-ell:il0+ell) = transform_Ylm2Xlm( ell,   Ylm(il0-ell:il0+ell) )
 
   status_t function test( ) result( ist )
 #ifdef DEBUG
-    ist = get_c2r_matrix(  )
+      ist = -1
+!     ist = get_c2r_matrix(  )
 !     ist = fcc_rotation_matrix(  )
 #else
 #ifdef DEBUG_GGA

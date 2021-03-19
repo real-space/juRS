@@ -843,7 +843,7 @@ cDBG  if( ndrop > 0 ) stop 'mult_tripoly_tripoly: entries dropped!'
   endfunction
 
 
-  real recursive function I_n( n, k )
+  real recursive function I_n( n, k ) result( In )
   !!       / infty
   !! I_n = | dx     exp(-k x^2) x^n
   !!       /-infty
@@ -851,15 +851,15 @@ cDBG  if( ndrop > 0 ) stop 'mult_tripoly_tripoly: entries dropped!'
   implicit none
     integer, intent(in) :: n
     real, intent(in)    :: k
-    I_n = 0. ! init
+    In = 0. ! init
     if( n < 0 ) return ! 0.
     if( modulo(n,2) == 1 ) return ! 0. ! all odd n result in zero
 !     if( k <= 0. ) return ! 0. ! stop not possible because recursive functions must be pure
     if( k <= 0. ) stop 'Gov: I_n: k must be positive!'
     if( n == 0 ) then
-      I_n = sqrt( Pi/k )
+      In = sqrt( Pi/k )
     else  ! n == 0
-      I_n = (n-1.)/(2.*k)*I_n( n-2, k ) ! recursive invocation
+      In = (n-1.)/(2.*k)*I_n( n-2, k ) ! recursive invocation
     endif ! n == 0
   endfunction
 

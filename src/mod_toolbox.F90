@@ -1491,6 +1491,7 @@ implicit none
     status_t :: ios
 #ifdef DEBUG
     integer :: l
+    character(len=*), parameter :: fun = "cat_2s"
     l = len_trim(s1) + len_trim(s2)
     if(o>0) then
       if( l > len(str) ) write(0,'(3A,I4,A,I4)') sym, ' cat: ', &

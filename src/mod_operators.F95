@@ -49,10 +49,6 @@ implicit none
   !public :: gradient
   public :: precon_a ! needed by CG and DIIS eigensolver
   public :: precon_Nf1 ! needed by CG and DIIS eigensolver
-#ifdef DEBUG
-  public :: check_matrix
-  public :: matrix_asymmetry
-#endif
 #ifdef EXTENDED
   public :: test
 #endif
@@ -71,16 +67,6 @@ implicit none
   interface complex_conjugate ! this function returns conjg(x) if x is complex, x if x is real (scalars only)
     module procedure complex_conjugate_r, complex_conjugate_c
   endinterface
-
-#ifdef DEBUG
-  interface check_matrix
-    module procedure check_symmetric_matrix, check_hermitian_matrix
-  endinterface
-
-  interface matrix_asymmetry
-    module procedure matrix_asymmetry_r, matrix_asymmetry_c
-  endinterface
-#endif
 
   interface kinetic ! the kinetic energy (or -1/2*Laplacian)
     module procedure kinetic_r, kinetic_c

@@ -1343,6 +1343,9 @@ cDBG          case default ; stop 'tPROJ proj_set: IDER out of [0,3]'
       enddo ! k3
 ! !$omp end do
 
+#ifdef NaN_SEARCH
+      ist = NaN_search( gddd, fun, 'dense-dense-dense grid for DG technique' )
+#endif
       deallocate( gddd, gddd_nonZ, stat=ist )
       if( ider > 0 ) &
       deallocate( drfval, dXlm, stat=ist )
@@ -1392,18 +1395,20 @@ cDBG  tm(3) = Wtime() ! end double grid
 ! !$omp barrier
 ! !$omp master
 
-cDBG  tm(4) = Wtime() ! start reversed interpolation time
-
+#ifdef NaN_SEARCH
+      ist = NaN_search( gcdd, fun, 'coarse-dense-dense grid for DG technique' )
+#endif
       deallocate( gcdd, gcdd_nonZ, stat=ist )
 
       allocate( gccc_nonZ(ise(1,IS):ise(1,IE),ise(2,IS):ise(2,IE),ise(3,IS):ise(3,IE)), stat=ist )
       allocate( gccc(mlnm,ise(1,IS):ise(1,IE),ise(2,IS):ise(2,IE),ise(3,IS):ise(3,IE)), stat=ist )
       if( ist /= 0 ) stop 'failed to allocate gccc array'
 
-
       gccc_nonZ = .false.
       gccc = 0.
 
+cDBG  tm(4) = Wtime() ! start reversed interpolation time
+      
 ! !$omp end master
 ! !$omp barrier
 
@@ -1433,11 +1438,11 @@ cDBG  tm(4) = Wtime() ! start reversed interpolation time
 
 cDBG  tm(5) = Wtime() ! stop reversed interpolation time
  
-      deallocate( gccd, gccd_nonZ, stat=ist )
-
 #ifdef NaN_SEARCH
-      call NaN_search( dg, fun, 'dense grid for DG technique' )
+      ist = NaN_search( gccd, fun, 'coarse-coarse-dense grid for DG technique' )
+      ist = NaN_search( gccc, fun, 'coarse-coarse-coarse grid for DG technique' )
 #endif
+      deallocate( gccd, gccd_nonZ, stat=ist )
 
       noe = count( gccc_nonZ ) 
 

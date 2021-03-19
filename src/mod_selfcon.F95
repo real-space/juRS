@@ -2,8 +2,8 @@
 
 ! #define DEBUG
 ! #define FULL_DEBUG
-#define c$omp !!!$omp
-! #define c$omp !$omp
+#define c_omp !!!$omp
+! #define c_omp !$omp
 
 ! no matter if in DEBUG mode or not, with this defined,
 ! the integral of rho_aug will always be displayed
@@ -1074,14 +1074,14 @@ cNaN  use debugtools, only: NaN_search
 #endif
 
 cDBG  if( nbnd*nspn*nkpt /= size( cpsi, 2 ) ) stop 'find_density_matrix: NBND*NSPN*NKPT /= NBSK'
-cNaN  call NaN_search( cpsi, fun, 'cpsi' )
+cNaN  ist = NaN_search( cpsi, fun, 'cpsi' )
 
 !! Warning: do NOT loop over the atoms in OpenMP parallel, since their order matters in the MPI communication
 !!          just open the parallel region here
-!!! c$omp parallel
+!!! c_omp parallel
     do ia = 1, size(a)
       if( a(ia)%owner /= me ) cycle ! atom owner task
-! c$omp single
+! c_omp single
 #ifdef CONSTR
       im = i_constraints( a(ia)%ja ) ! index of the constraint mask for this atom
 #endif
@@ -1095,9 +1095,9 @@ cNaN  call NaN_search( cpsi, fun, 'cpsi' )
 #endif
       allocate( cp(np,np,1:ns), stat=ist )
       cp = 0. ! init temp array for a%Dm
-! c$omp end single
-! c$omp barrier
-! c$omp do collapse(3) private(ikpt,ispn,ibnd,ibsk,js,occ,i1,i2) reduction(+:cp) schedule(dynamic)
+! c_omp end single
+! c_omp barrier
+! c_omp do collapse(3) private(ikpt,ispn,ibnd,ibsk,js,occ,i1,i2) reduction(+:cp) schedule(dynamic)
       do ikpt = 1, nkpt
       do ispn = 1, nspn
       do ibnd = 1, nbnd
@@ -1125,9 +1125,9 @@ cDBG    elseif( occ < 0. ) then ; stop 'SCF find_density_matrix: negative occupa
       enddo ! ibnd
       enddo ! ispn
       enddo ! ikpt
-! c$omp end do
-! c$omp barrier
-! c$omp single
+! c_omp end do
+! c_omp barrier
+! c_omp single
 
 #ifdef DEBUG
       if( ibsk /= size(cpsi,2) ) stop 'find_density_matrix: combindex IBSK does not match dim#2 of CPSI after counting.'
@@ -1154,9 +1154,9 @@ cDBG    elseif( occ < 0. ) then ; stop 'SCF find_density_matrix: negative occupa
 #else
       call atomic_population( a(ia), me, 0 )
 #endif
-! c$omp end single
+! c_omp end single
     enddo ! ia
-! c$omp end parallel
+! c_omp end parallel
     ist = 0
   contains
 
@@ -1219,8 +1219,8 @@ cNaN  use debugtools, only: NaN_search
 
 cDBG  if( nbnd*nspn*nkpt /= nbsk ) stop 'construct_smooth_density: NBND*NSPN*NKPT /= NBSK'
 
-cNaN  call NaN_search( spsi, fun, 'smooth wave functions' )
-cNaN  call NaN_search( psi_state(:)%occ, fun, 'occupation numbers' )
+cNaN  ist = NaN_search( spsi, fun, 'smooth wave functions' )
+cNaN  ist = NaN_search( psi_state(:)%occ, fun, 'occupation numbers' )
 
     !
     ! \tilde{n} = <\tilde{\Psi}|  |\vec{r}><\vec{r}|  |\tilde{\Psi}>
@@ -1232,7 +1232,7 @@ cNaN  call NaN_search( psi_state(:)%occ, fun, 'occupation numbers' )
     cw = 0.
 #endif
     rho = 0. ! init
-c$omp parallel do collapse(3) private(ikpt,ispn,ibnd,ibsk,js,occ) reduction(+:rho)
+c_omp parallel do collapse(3) private(ikpt,ispn,ibnd,ibsk,js,occ) reduction(+:rho)
     do ikpt = 1, nkpt
       do ispn = 1, nspn
         do ibnd = 1, nbnd
@@ -1252,7 +1252,7 @@ c$omp parallel do collapse(3) private(ikpt,ispn,ibnd,ibsk,js,occ) reduction(+:rh
         enddo ! ibnd
       enddo ! ispn
     enddo ! ikpt
-c$omp end parallel do
+c_omp end parallel do
 
     call MPIallsum( rho, g%equi_comm )
 
@@ -1261,7 +1261,7 @@ c$omp end parallel do
     if(o>0) write(o,'(3A,99F12.6)') sym, fun, 'constraint weights  ', cw
 #endif
 
-cNaN  call NaN_search( rho, fun, 'smooth density' )
+cNaN  ist = NaN_search( rho, fun, 'smooth density' )
     ist = 0
   contains
 
@@ -1686,7 +1686,7 @@ cDBG      write(*,'(3a,i4,a,es16.8)') sym, fun, 'MAG atm', a%ja , ' = ', t
 
     ist = 0
     me = MPImyrank( comm )
-! c$omp parallel do private(ia) schedule(dynamic,1)
+! c_omp parallel do private(ia) schedule(dynamic,1)
     do ia = 1, size( a, 1 )
       if( a(ia)%owner /= me ) cycle ! atom owner task
 
@@ -1695,7 +1695,7 @@ cDBG      write(*,'(3a,i4,a,es16.8)') sym, fun, 'MAG atm', a%ja , ' = ', t
       ist = set_rad_coef( a(ia) )
 
     enddo ! ia
-! c$omp end parallel do
+! c_omp end parallel do
 
   endfunction setup_radial_coefficients
 
@@ -1761,7 +1761,7 @@ cNaN  use debugtools, only: NaN_search
       enddo ! ilm
       !--------------------------------------
     enddo ! is
-cNaN  call NaN_search( gd(:,:,:,:), fun, 'temp. matrix GntDm = gaunt*a%dm' )
+cNaN  ist = NaN_search( gd(:,:,:,:), fun, 'temp. matrix GntDm = gaunt*a%dm' )
 #undef gd
     ist = 0
   endfunction set_rad_coef
@@ -1789,7 +1789,7 @@ cDBG  use constants, only: sqrt4pi
 
     me = MPImyrank( comm )
     ist = 0
-! c$omp parallel do private(ia) schedule(dynamic,1)
+! c_omp parallel do private(ia) schedule(dynamic,1)
     do ia = 1, size(a)
       if( a(ia)%owner /= me ) cycle ! atom owner task
       !  construct the radial SMT and TRU charge densities
@@ -1798,7 +1798,7 @@ cDBG  use constants, only: sqrt4pi
       ist = set_rad_rho( a(ia) )
 
     enddo ! ia
-! c$omp parallel do
+! c_omp parallel do
 
     ! communicate the compensation multipole moments qlm to the
     ! other processes that contribute to this atom
@@ -1892,7 +1892,7 @@ cDBG  if( .not. associated( a%rho ) ) stop 'set_rad_rho: ERROR: in owner process
       !--------------------------------------
     enddo ! is
 
-cNaN  call NaN_search( a%rho, fun, 'a%rho (cor+val)' )
+cNaN  ist = NaN_search( a%rho, fun, 'a%rho (cor+val)' )
 
     ! the total charge density rho(:,:,0,:) spin integrated
     do iq = I_TRU, I_SMT ! for the two quantities
@@ -1903,7 +1903,7 @@ cNaN  call NaN_search( a%rho, fun, 'a%rho (cor+val)' )
       endselect ! nspin
     enddo ! iq
 
-cNaN  call NaN_search( a%rho, fun, 'a%rho_aug' )
+cNaN  ist = NaN_search( a%rho, fun, 'a%rho_aug' )
 
     ! generate the qlm (multipole deficit moments)
     ilm = 0
@@ -1928,7 +1928,7 @@ cDBG  if(o>0) write(o,'(3A,I0,9(A,F0.16))') sym, fun, 'atom #',a%ja,' q00(static
     if(o>0) write(o,'(9A)') sym, fun, 'NOHartreePotential activated: rhoaug = -Z*cmp'
 #endif
 
-cNaN  call NaN_search( a%qlm, fun, 'a%qlm' )
+cNaN  ist = NaN_search( a%qlm, fun, 'a%qlm' )
 
     ! add the compensation charge densities on the radial grid
     ! rho(:,ilm,0,:) are the TRU and SMT augmented densities
@@ -1989,14 +1989,14 @@ cNaN  use debugtools, only: NaN_search
       ! project into the variable vlm
       call project( cmp=a(ia)%cmp, Ves=Ves, c=vlm(1:mlm2), dV=g%hvol )
 
-cNaN  call NaN_search( vlm, fun, 'a%vlm (loc)' )
+cNaN  ist = NaN_search( vlm, fun, 'a%vlm (loc)' )
 
       call AtomReduce( vlm(1:mlm2), comm, a(ia)%owner, a(ia)%plist )
 
       if( me == a(ia)%owner ) then
 
         a(ia)%vlm = vlm(1:mlm2) ! store the multipole moments of the electrostatic potential
-cNaN    call NaN_search( a(ia)%vlm, fun, 'a%uhlm (own)' )
+cNaN    ist = NaN_search( a(ia)%vlm, fun, 'a%uhlm (own)' )
 
         ! compute the electrostatic potentials on the radial grid
         ! and align them with the correct potential via a%vlm(1:mlm2)
@@ -2053,7 +2053,7 @@ cDBG  logical :: warn_rho_less_than_zero = .false.
       !! spherical grid points (ntransform) is too small to sample (2*a%s%ellmax+1)**2 spherical harmonics
 
       nr = size(a(ia)%rho,1) ! number of radial grid points
-cNaN  call NaN_search( a(ia)%rho, fun, 'a%rho' )
+cNaN  ist = NaN_search( a(ia)%rho, fun, 'a%rho' )
 
       npts = nPoints ! number of points sampling a sphere shell
       if( deriv ) then ; allocate( rho_p(npts,nr,1:1,-1:+1), vxc_p(npts,nr,1:1,0:nspins), drho(npts,nr,1:1,1:3,-1:+1), stat=ist )
@@ -2081,13 +2081,13 @@ cNaN  call NaN_search( a(ia)%rho, fun, 'a%rho' )
           enddo ! is
         endif ! deriv
 
-cNaN    call NaN_search( rho_p, fun, 'rho_p = density on the sphere points' )
+cNaN    ist = NaN_search( rho_p, fun, 'rho_p = density on the sphere points' )
 cDBG    if( any(rho_p < 0.) ) warn_rho_less_than_zero = .true.
 
         ! evaluate the exchange correlation potential in real-space
         ist = xc_potential( rho=rho_p, vxc=vxc_p(:,:,:,1:nspins), exc=vxc_p(:,:,:,I_EXC), &
                            key=key, drho=drho )
-cNaN    call NaN_search( vxc_p, fun, 'vxc_p = potential on sphere points' )
+cNaN    ist = NaN_search( vxc_p, fun, 'vxc_p = potential on sphere points' )
 
         do is = I_EXC, nspins ! is == 0 (I_EXC) stands for the XC energy density (I_EXC)
           ! back-transform vxc from points on the sphere to multipoles
@@ -2107,7 +2107,7 @@ cNaN    call NaN_search( vxc_p, fun, 'vxc_p = potential on sphere points' )
         write(842,'(A)') ''
       endif
 #endif
-cNaN  call NaN_search( a(ia)%pot, fun, 'a%pot = potential in the sphere' )
+cNaN  ist = NaN_search( a(ia)%pot, fun, 'a%pot = potential in the sphere' )
 cDBG  if( warn_rho_less_than_zero .and. o>0) write(o,'(3A,I0)') sym, fun, 'rho < 0 on sphere points for atom #', a(ia)%ja
 
 !     ! local vars
@@ -2503,50 +2503,50 @@ cDBG  if( any( n(1:3) /= g%ng(1:3) ) ) stop 'SCF: grid_derivatives: grid descrip
       case( :0 ) ; return ! no array range
       endselect ! n4
 
-! c$omp parallel
+! c_omp parallel
 
-! c$omp sections
-! c$omp section
+! c_omp sections
+! c_omp section
       ist = derive_id( g, 1, ro, dx )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 2, ro, dy )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 3, ro, dz )
-! c$omp section
+! c_omp section
       derivative(:,:,:,GGGR,is) = 0. ! init the GGGR field
-! c$omp end sections
+! c_omp end sections
 
 
-! c$omp barrier
+! c_omp barrier
 
 
-! c$omp sections
-! c$omp section
+! c_omp sections
+! c_omp section
       derivative(:,:,:,IAGR,is) = sqrt( dx*dx + dy*dy + dz*dz ) ! calculate IAGR = | grad rho |
-! c$omp section
+! c_omp section
       ist = derive_id( g, 1, dx, dxx )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 2, dy, dyy )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 3, dz, dzz )
 
-! c$omp section
+! c_omp section
       ist = derive_id( g, 1, dy, dxy )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 2, dz, dyz )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 3, dx, dzx )
 #ifdef NOSchwartzAssumption
-! c$omp section
+! c_omp section
       ist = derive_id( g, 1, dz, dxz )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 2, dx, dyx )
-! c$omp section
+! c_omp section
       ist = derive_id( g, 3, dy, dzy )
 #endif
-! c$omp end sections
+! c_omp end sections
 
-! c$omp end parallel
+! c_omp end parallel
 
       ! calculate GGGR = grad rho * grad | grad rho |
 #ifdef NOSchwartzAssumption

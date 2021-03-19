@@ -1,6 +1,4 @@
-#ifdef DEBUG_ALL
-#define DEBUG
-#endif
+#include "config.h"
 
 ! #define DEBUG
 ! #define FULL_DEBUG
@@ -87,7 +85,7 @@ implicit none
   endinterface
 
 #ifndef DEBUG
-  integer, parameter          :: o = 6 !! output unit 0: no output 6:stdout
+  iounit_t, parameter          :: o = 6 !! output unit 0: no output 6:stdout
 #endif
 
 #ifdef EXTENDED

@@ -1,7 +1,7 @@
 #include "config.h"
 
- #define DEBUG
- #define FULL_DEBUG
+#define DEBUG
+#define FULL_DEBUG
 
 #ifdef DEBUG
 

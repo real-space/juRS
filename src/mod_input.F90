@@ -3,15 +3,19 @@
 ! #define DEBUG
 ! #define FULL_DEBUG
 
-#define cDBG !DBG
 #define cFDB !FDB
+
 #ifdef DEBUG
 !! removes comment from debug line
 #define cDBG
 
 #ifdef FULL_DEBUG
-#define cFDB 
+!! removes comments from full-debug lines
+#define cFDB
 #endif
+#else
+
+#define cDBG !DBG
 #endif
 
 !!! suppress the usage of the variable environment

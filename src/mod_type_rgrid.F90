@@ -1,6 +1,6 @@
 #include "config.h"
 
- #define DEBUG
+#define DEBUG
 
 ! #define EXPONENTIAL
 ! #define RECIPROCAL
