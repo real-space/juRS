@@ -9,8 +9,10 @@ juRS equally targets large supercell geometries with (potentially magnetic) impu
       ln -s systems/system.make.INTEL ./system.make
 2) make deps
 
-3) make
+3) mkdir prp
+
+4) make
 or
-3) make EXTENDED=TRUE
+4) make EXTENDED=TRUE
     
 

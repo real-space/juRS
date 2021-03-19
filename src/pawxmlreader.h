@@ -1,0 +1,16 @@
+#ifndef PAWXMLREADER
+#define PAWXMLREADER
+
+#define PAWXMLREADER_SHAPE_GAUSS  1
+#define PAWXMLREADER_SHAPE_BESSEL 2
+#define PAWXMLREADER_SHAPE_SINC   3
+#define PAWXMLREADER_SHAPE_EXP    4
+
+
+#define AE_WAVE     1
+#define PSEUDO_WAVE 2
+#define PROJ_WAVE   3
+
+
+#endif
+

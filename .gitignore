@@ -6,9 +6,6 @@ paw*
 src/*~
 prp/*
 system.make
-sys/*
-Slai/*.pdf
-SLai/*log
 */*/*-converted-to.pdf 
 tool/doxygen.conf
 tool/example/*
@@ -16,7 +13,6 @@ tool/html/*
 tool/latex/*
 tool/src/*.pyc
 tool/src/*~
-TEST*/
-single_atom.*
+[Tt][Ee][Ss][Tt]*/
 .DS_Store
 mod.deps

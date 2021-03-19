@@ -79,6 +79,7 @@ implicit none
   use radial_potential, only: Hartree_potential, xc_functional
   use radial_integrator, only: integrate_outwards
   use radial_integrator, only: integrate_outwards_inhomogeneous
+  use type_comp_desc, only: SHAPE_BESSEL, SHAPE_GAUSS, SHAPE_SINC, SHAPE_EXP
   use LAPACK, only: Solve_Ax_b
   use all_electron, only: write2file
   implicit none
@@ -124,12 +125,6 @@ implicit none
     character(len=*), parameter     :: tru2char(I_TRU:I_PRJ) = (/'tru','smt','prj'/)
     real                            :: duality(4,4,0:s%ellmax)
     real                            :: occ
-#ifndef USE_PAWXMLREADER
-    integer, parameter :: SHAPE_GAUSS  = PAWXMLREADER_SHAPE_GAUSS, &
-                          SHAPE_BESSEL = PAWXMLREADER_SHAPE_BESSEL, &
-                          SHAPE_SINC   = PAWXMLREADER_SHAPE_SINC, &
-                          SHAPE_EXP    = PAWXMLREADER_SHAPE_EXP
-#endif
 
     allocate( rho_tru(0:s%g%imx), rho_smt(0:s%g%imx), rho_aug(0:s%g%imx), rho(0:s%g%imx,0:0) )
     allocate( vxc_smt(0:s%g%imx,0:0), vxc_tru(0:s%g%imx,0:0) )
